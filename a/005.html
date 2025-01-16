@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>The window.print() Method</h2>
+
+<p>Click the button to start printing the current page repeatedly.</p>
+
+<button onclick="startPrinting()">Start Printing</button>
+<button onclick="stopPrinting()">Stop Printing</button>
+
+<script>
+let printingInterval;
+
+function startPrinting() {
+  printingInterval = setInterval(function() {
+    window.print();
+  }, 1000); // Print every 1000 milliseconds (1 second)
+}
+
+function stopPrinting() {
+  clearInterval(printingInterval);
+}
+</script>
+
+</body>
+</html>

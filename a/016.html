@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<body style="background-color:rgb(36, 247, 159);">
+
+<h2>What Can JavaScript Do?</h2>
+<p id="demo99">JavaScript can change HTML content.</p>
+<button type="button" onclick="document.getElementById('demo99').innerHTML = 'Hello JavaScript!'">Click Me!</button>
+
+<p>JavaScript can show hidden HTML elements.</p>
+<p id="demo2" style="display:none">Hello JavaScript!</p>
+<button type="button" onclick="document.getElementById('demo2').style.display='block'">Click Me!</button>
+
+<p id="demo3">JavaScript can hide HTML elements.</p>
+<button type="button" onclick="document.getElementById('demo3').style.display='none'">Click Me!</button>
+
+<p>JavaScript can change HTML attribute values.</p>
+<p>In this case JavaScript changes the value of the src (source) attribute of an image.</p>
+<button onclick="document.getElementById('ember').src='kép1.png'">állás</button>
+<button onclick="document.getElementById('ember').src='kép2.png'">ugrás</button>
+<img id="ember" src="kép1.png" style="width:100px">
+
+<p>In this case JavaScript changes the value of the width attribute of an image.</p>
+<button onclick="document.getElementById('kép').src='kép3.png'; document.getElementById('kép').style.width='100px'">nagy</button>
+<button onclick="document.getElementById('kép').src='kép4.png'; document.getElementById('kép').style.width='50px'">kicsi</button>
+<br>
+<img id="kép" src="kép3.png" style="width:100px">
+
+<p>Külső script fájl</p>
+<button onclick="funk1()">változtató</button>
+<p id="01">szöveg</p>
+<script src="külső.js"></script>
+
+<p>Online script fájl</p>
+<script src="https://www.w3schools.com/js/myScript.js"></script>
+<button type="button" onclick="myFunction()">Click Me</button>
+<p id="demo">A Paragraph.</p>
+<p>Terminálba üzenet</p>
+<button type="button" onclick="window.alert('Csak azt mondhatod, hogy ok, ok?')">üzi</button>
+<button type="button", onclick="document.write('<p title=csalódtam_benned style=font-size:50px>: (</p>')", style="background-color: darkred; font-size: 24px; transform: translate(85vw);", title="NE, ne tedd!">Törlés</button>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html> <!--üzi-->
+<html>
+<body>
+
+<h2>JavaScript Statements</h2>
+<p>A <b>JavaScript program</b> is a list of <b>statements</b> to be executed by a computer.</p>
+<p id="demo"></p>
+
+<button onclick="window.print()">nyomtat</button>
+
+<h1>JavaScript Dates</h1>
+<h2>The getTime() Method</h2>
+<p></p>
+<p>Return the number of milliseconds since midnight January 1, 1970:</p>
+
+<p id="time"></p>
+
+<script>
+function asd() {
+	const d = new Date();
+	document.getElementById("time").innerHTML = d.getTime();
+}
+setInterval(asd, 1)
+</script>
+
+<script>
+const man = {
+  firstName: "John",
+  lastName : "Doe",
+  id       : 5566,
+  fullName : function() {
+    return this.firstName + " " + this.lastName;
+  }
+};
+// Numbers:
+let length = 16;
+let weight = 7.5;
+
+// Strings:
+let color = "Yellow";
+let lastName = "Johnson";
+
+// Booleans
+let a = true;
+let b = false;
+
+// Object:
+const person = {firstName:"John", lastName:"Doe"};
+
+// Array object:
+const cars = ["Saab", "Volvo", "BMW"];
+
+// Date object:
+const date = new Date("2022-03-25"); 
+
+let car = {type:"Fiat", model:"500", color:"white"};
+let nevek = ["imi", "eci", "márti", "saci", "ildi"];
+let x, y, z;  //üzi 
+x = 5;        
+y = 6;        
+z = x + y;    
+
+document.getElementById("demo").innerHTML =
+"The value of z is " + z + ".";  
+</script>
+
+</body>
+</html>

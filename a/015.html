@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p id="123"></p>
+
+<script>
+let x = 0;
+function a() {
+    document.getElementById('123').innerHTML = x;
+    ++x;
+}
+
+
+setInterval(a, 0);
+</script>
+
+</body>
+</html>
