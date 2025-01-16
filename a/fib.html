@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<body>
+<button onclick="asd()">kövi szám</button>
+<p id="id">0</p>
+
+<button onclick="asd2()">számítás</button>
+<p>φ vagy (1+sqrt(5))/2:</p>
+<p id="id2">0</p>
+
+<script>
+let y = 1;
+let x = 1;
+function asd() {
+    y = y+x;
+    x = y-x;
+    document.getElementById('id').innerHTML = y;
+}
+function asd2() {
+    document.getElementById('id2').innerHTML = y/x;
+}
+</script>
+
+</body>
+</html>

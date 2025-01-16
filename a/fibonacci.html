@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fibonacci Generator</title>
+</head>
+<body>
+
+  <p id="fibonacciResult"></p>
+
+  <script>
+    const b = parseInt(prompt('Hány számot kérsz?'));
+    let x = 0;
+    let y = 1;
+    let result = "";
+
+    for (let a = 0; a < b; a++) {
+      const fib = x + y;
+      x = y;
+      y = fib;
+      result += fib + " ";
+    }
+
+    document.getElementById("fibonacciResult").textContent = result;
+  </script>
+
+</body>
+</html>

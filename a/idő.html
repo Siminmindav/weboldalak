@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p id="idő1"></p>
+
+<script>
+function updateTime() {
+    document.getElementById('idő1').innerHTML = new Date().toLocaleTimeString();
+}
+
+// Update the time every second (1000 milliseconds)
+setInterval(updateTime, 1000);
+</script>
+
+</body>
+</html>
