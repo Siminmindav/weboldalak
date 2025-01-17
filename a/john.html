@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html> <!-- ÉÉÉÉÉÉÉÉÉÉÉÉÉé -->
+<body>
+
+<h2 style="font-family:sans-serif;">JavaScript Szövegek</h2>
+
+<p style="padding-bottom: 100px;">A szöveg írható simpla és dupla macskakörömmel.</p>
+<p id="3" style="top: 80px; position: fixed; background-color: bisque; padding: 5px; border: 1px solid black">jelenleg <b>100</b> 'John Doe' vagy "John Doe" van</p>
+<button style="right: 100px; position: fixed; top: 50px; height: 50px;" onclick="f()" title="1.6180339887-tel szorzó">Nincs elég "John Doe"</button>
+
+<p id="demo"></p>
+
+<script> //$
+let $ = "",
+$$$ = 100,
+$$$$ = 1,
+$$$$$ = $$$ * $$$$ + $ + $$$;
+$$$$ = $$$$ - $$$$;
+for (let $$ = $$$$; $$ < $$$; $$++){
+	$ += 'John Doe '
+	}
+document.getElementById("demo").innerHTML = $;
+
+function f(){
+	$$$ = $$$ * 1.6180339887;
+	for (let $$ = $$$$; $$ < $$$; $$++){
+	$ += 'John Doe '
+	}
+	document.getElementById("demo").innerHTML = $;
+	document.getElementById("3").innerHTML = `jelenleg <b>${Math.floor($$$)}</b> 'John Doe' vagy "John Doe" van`; //``````````````````````````
+}
+</script>
+
+</body>
+</html>
