@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h1>JavaScript dolgok</h1>
+<h2><i>alcím</i></h2>
+
+<p id="demo">"A kocsi " + x + " " + car[x]</p>
+<img id="b" src="https://www.w3schools.com/js/objectexplained.jpg" style="width:279px; position: fixed;">
+<br>
+<button onclick="car.vezess()" style="position: fixed; top: 400px;">vezess</button>
+<select id="a" onchange="f()" style="position: fixed; top: 450px;">
+    <option value="márkája">Márka</option>
+    <option value="modelle">Model</option>
+    <option value="színe">Szín</option>
+    <option value="súlya">Súly</option>
+    <option value="vezess">Vezess</option>
+</select>
+
+<script>
+let xcord = 0;
+let ycord = 0;
+let megy = 0;
+let time = 0;
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function mzg(){
+    xcord += 10;
+    ycord += 5;
+    if (parseInt(document.getElementById("b").style.paddingLeft) > (window.innerWidth+100)) {
+       xcord = 0;
+       ycord = 0;
+    }
+    document.getElementById("b").style.paddingLeft=`${xcord}px`;
+    document.getElementById("b").style.paddingTop=`${ycord}px`;
+}
+
+const car = {
+	márkája:"Fiat",
+    modelle:"500",
+    színe:"fehér",
+    súlya: "850 kg",
+    vezess: function(){
+    	alert("brum brum");
+        megy = 1;
+        }
+};
+function f(){
+    let x = document.getElementById("a").value
+    if (typeof car[x] === "function"){
+    	car[x]();
+    } else {
+    	document.getElementById("demo").innerHTML = "A kocsi " + x + " " + car[x];
+    }
+};
+function mennes(){
+    if (megy == 1) {
+        mzg()
+    }
+    time++;
+    if (time > (window.innerWidth/10*4) && xcord == 0) {
+        megy = 0;
+    }
+}
+setInterval(mennes,10)
+</script>
+
+</body>
+</html>
