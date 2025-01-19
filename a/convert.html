@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            .szam {
+                margin: 0px;
+            }
+            p, input {
+                margin: 5px;
+            }
+        </style>
+    </head>
+<body>
+
+    <h2>JavaScript Számok</h2>
+    <h4>A toString() 2-es számrendszertől 36-os számrendszerig alakít át számokat:</h3>
+    <p style="display: inline-block;">Írj be egy számot</p>
+    <input id="3" oninput="f()" type="text" ></input>
+    <p id="2"></p>
+    <br>
+    <p id="1"></p>
+
+    <script>
+        let x = 10,
+        lista = "",
+        input = 0;
+        for (let i = 2; i < 37; i++) {
+            if (i == 10){
+                    
+            }else{
+                lista += `<p class="szam">${i} számrendszerében: ${x.toString(i)}</p>`
+            }
+        };
+        document.getElementById("1").innerHTML = lista;
+        lista="";
+        document.getElementById("2").innerHTML = `A szám ${x}.`;
+
+        function f(){
+            x = document.getElementById("3").value;
+            for (let i = 2; i < 37; i++) {
+                if (i == 10){
+                    
+                }else{
+                    lista += `<p class="szam">${i} számrendszerében: ${parseInt(x).toString(i)}</p>`
+                }
+            };
+
+            document.getElementById("1").innerHTML = lista;
+            lista="";
+            document.getElementById("2").innerHTML = `A szám ${x}.`;
+        }
+    </script>
+
+    </body>
+</html>
