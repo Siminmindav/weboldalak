@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="hu">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>LNKO</title>
+        <meta name="description" content="leírás">
+        <style>
+
+        </style>
+    </head>
+    <body>
+        <h1>LNKO számláló</h1>
+        <p>Itt mindenszám LNKO-ja ki számlálhattató</p>
+        <label for="1">szám 1</label>
+        <input id="1" type="number" oninput="f()">
+        <br>
+        <label for="2">szám 2</label>
+        <input id="2" type="number" oninput="f()">
+        <h3>Eredmény:</h3>
+        <p id="3"></p>
+        <script>
+            function f(){
+                let x = parseInt(document.getElementById("1").value),
+                y = parseInt(document.getElementById("2").value);
+                if (!isNaN(x) && !isNaN(y) && x > 0 && y > 0) {
+                    while (y !== 0){
+                        let z = y;
+                        y = x % y;
+                        x = z;  
+                    }
+                    document.getElementById("3").innerHTML = x;
+                }
+            }
+        </script>
+    </body>
+</html>
