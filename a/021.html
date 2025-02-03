@@ -19,22 +19,36 @@
         <h3>Eredmények:</h3>
         <p id="3"></p>
         <p id="4"></p>
+        <button onclick="g()">Részeredmény</button>
+        <p id="5"></p>
         <script>
+            let on = -1;
             function f(){
                 let x = parseInt(document.getElementById("1").value),
                 y = parseInt(document.getElementById("2").value)
                 x2 = x
-                y2 = y;
+                y2 = y
+                katica = [];
                 if (!isNaN(x) && !isNaN(y) && x > 0 && y > 0) {
                     while (y !== 0){
                         let z = y;
                         y = x % y;
-                        x = z;  
+                        x = z;
+                        katica += `x: ${x}, y: ${y}, [x/y]: ${(x / y).toFixed(0)}||`
                     }
                     document.getElementById("3").innerHTML = "LNKO: " + x;
                     document.getElementById("4").innerHTML = "LKKT: " + ((x2*y2)/x);
-                }
-            }
+                };
+            };
+            function g() {
+                f();
+                on *= -1;
+                if (on == 1) {
+                    document.getElementById("5").innerHTML = katica;
+                } else {
+                    document.getElementById("5").innerHTML = " ";
+                };
+            };
         </script>
     </body>
 </html>
