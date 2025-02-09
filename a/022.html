@@ -5,19 +5,32 @@
     <body  style="background-color: rgb(188, 201, 188);">
         <h1>Másodpercek</h1>
         <input type="number" id="in" placeholder="Hány éves vagy?" oninput="f()">
-        <div id="1"></div> 
+        <div id="egy"></div> 
+        <div id="kettő"></div>
         <script>
+            let tizedmásodperc = 0;
+            const év = 60 * 60 * 24 * 365;
+            
             function a(id,value){
                 document.getElementById(id).innerHTML = value;
             };
+
             function f() {
                 let x = document.getElementById("in").value;
                 if (x <= 75) {
-                    a("1",`${(60*60*24*365*x).toLocaleString("de-DE")} másodpercet éltél és még kb. ${(60*60*24*365*(75-x)).toLocaleString("de-DE")} másodpercet fogsz élni.<br>Életed ${(x/75*100).toFixed(2)}%-át leélted`);
+                    a("egy",`${(év*x).toLocaleString("de-DE")} másodpercet éltél és még kb. ${(év*(75-x)).toLocaleString("de-DE")} másodpercet fogsz élni.<br>Életed ${(x/75*100).toFixed(2)}%-át leélted`);
                 } else {
-                    a("1",`${(60*60*24*365*x).toLocaleString("de-DE")} másodpercet éltél és az átlag ember már ${(60*60*24*365*(75-x)*-1).toLocaleString("de-DE")} másodperce meghalt.<br>Átlag életkor ${(x/75*100).toFixed(2)}%-át leélted`);
-                }
-            };  
+                    a("egy",`${(év*x).toLocaleString("de-DE")} másodpercet éltél és az átlag ember már ${(év*(75-x)*-1).toLocaleString("de-DE")} másodperce meghalt.<br>Átlag életkor ${(x/75*100).toFixed(2)}%-át leélted`);
+                };
+            };
+
+            function g() {
+                a("kettő",`<br>A weboldal megnyitása óta az emberiség kollektíven<br>${((tizedmásodperc/10)/(év*75/8025000000)).toFixed(0)} emberi életet élt le, vagy<br>${Number(((tizedmásodperc/10)*8025000000).toFixed(0)).toLocaleString("de-DE")} másodpercet töltött el.`);
+                tizedmásodperc += 1;
+            };
+
+            f()
+            setInterval(g,100);
         </script>
     </body>
 </html>
