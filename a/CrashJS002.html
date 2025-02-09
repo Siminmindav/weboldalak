@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body  style="background-color: rgb(188, 201, 188);">
+        <h1>Másodpercek</h1>
+        <input type="number" id="in" placeholder="Hány éves vagy?" oninput="f()">
+        <div id="1"></div> 
+        <script>
+            function a(id,value){
+                document.getElementById(id).innerHTML = value;
+            };
+            function f() {
+                let x = document.getElementById("in").value;
+                if (x <= 75) {
+                    a("1",`${(60*60*24*365*x).toLocaleString("de-DE")} másodpercet éltél és még kb. ${(60*60*24*365*(75-x)).toLocaleString("de-DE")} másodpercet fogsz élni.<br>Életed ${(x/75*100).toFixed(2)}%-át leélted`);
+                } else {
+                    a("1",`${(60*60*24*365*x).toLocaleString("de-DE")} másodpercet éltél és az átlag ember már ${(60*60*24*365*(75-x)*-1).toLocaleString("de-DE")} másodperce meghalt.<br>Átlag életkor ${(x/75*100).toFixed(2)}%-át leélted`);
+                }
+            };  
+        </script>
+    </body>
+</html>
