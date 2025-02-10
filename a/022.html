@@ -22,6 +22,9 @@
                 } else {
                     a("egy",`${(év*x).toLocaleString("de-DE")} másodpercet éltél és az átlag ember már ${(év*(75-x)*-1).toLocaleString("de-DE")} másodperce meghalt.<br>Átlag életkor ${(x/75*100).toFixed(2)}%-át leélted`);
                 };
+                if (x < 0) {
+                  a("egy",`${(év*x).toLocaleString("de-DE")} másodperc múlva születsz meg.`);
+                };
             };
 
             function g() {
