@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body {
+                background-color: burlywood;
+            }
+            h1 {
+                font-family:fantasy;
+                font-size: 36px;
+
+            }
+            .a {
+                background-color: aqua;
+                border: 5px solid rgb(29, 1, 1);
+                text-align: center;
+            }
+            .b {
+                margin-bottom: 20px;
+            }
+            .c {
+                margin-left: 10%;
+                margin-right: 10%;
+                padding: 10px;
+                padding-bottom: 200px;
+                background-color: darkolivegreen;
+                border: 3px dotted;
+                position: relative;
+            }
+            .d {
+                position: absolute;
+                bottom: 0;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div class="a b">
+            <h1>Szöveg objektumok funkciói</h1>
+        </div>
+        <div class="b c">
+            <input type="text" oninput="f()" id="in" placeholder="  Írj be valamit ">
+            <button onclick="g()" class="b">kövi</button>
+            <div id="out"></div>
+            <a class="d" href="https://siminmindav.github.io/info/index.html">más weboldalak</a>
+        </div>
+        <script>
+            let szám = 1,
+            str = " Írj be valamit ",
+            dict = {
+                "1":[str.toLowerCase(), "<b>toLowerCase()</b><br>Minden kisbetüs lesz."],
+                "2":[str.toUpperCase(), "<b>toUpperCase()</b><br>Minden nagybetüs lesz."],
+                "3":[str.includes("a"), "<b>includes(\"szöveg\")</b><br>Megnézi hogy tartalmazza-e az adott szöveget.(most pl \"a\" betüt keres)"],
+                "4":[str.padStart(30, "-"), "<b>padStart(\"szám\",\"karakter\")</b><br>Egy szöveg mellé karaktereket rak olyan mint pythonban a f{\"szöveg\":-^szám}."],
+                "5":[str.repeat(3), "<b>repeat(szám)</b><br>Ismétel"],
+                "6":[str.trim(), "<b>trim()</b><br>Levágja oldalról az üres helyeket"],
+                "7":[str.slice(2, 9), "<b>slice(szám)</b><br>Felvág"],
+                "8":[str[4], "<b>lista,szöveg,szótár[szám]</b><br>elemet kiszed 0-val kezdődik"], 
+            };
+            function g() {
+                szám += 1;
+                if (szám > Object.keys(dict).length){
+                    szám = 1;
+                }
+                f();
+            }
+            function f() {
+                str = document.getElementById("in").value || " Írj be valamit ";
+                dict = {
+                    "1":[str.toLowerCase(), "<b>toLowerCase()</b><br>Minden kisbetüs lesz."],
+                    "2":[str.toUpperCase(), "<b>toUpperCase()</b><br>Minden nagybetüs lesz."],
+                    "3":[str.includes("a"), "<b>includes(\"szöveg\")</b><br>Megnézi hogy tartalmazza-e az adott szöveget.(most pl \"a\" betüt keres)"],
+                    "4":[str.padStart(30, "-"), "<b>padStart(\"szám\",\"karakter\")</b><br>Egy szöveg mellé karaktereket rak olyan mint pythonban a f{\"szöveg\":-^szám}."],
+                    "5":[str.repeat(6), "<b>repeat(szám)</b><br>Ismétel"],
+                    "6":[str.trim(), "<b>trim()</b><br>Levágja oldalról az üres helyeket"],
+                    "7":[str.slice(2, 9), "<b>slice(szám)</b><br>Felvág"],
+                    "8":[str[4], "<b>lista,szöveg,szótár[szám]</b><br>elemet vizsgál"], 
+                };
+                let szöveg = "";
+                szöveg += "<p>"+dict[szám][1]+"<br>"+dict[szám][0]+"</p>"
+                /*
+                for (let x in dict){
+                    szöveg += "<p>"+dict[x][1]+"<br>"+dict[x][0]+"</p>";
+                };
+                */
+                document.getElementById("out").innerHTML = szöveg;
+            };
+            f();
+        </script>
+    </body>
+</html>
