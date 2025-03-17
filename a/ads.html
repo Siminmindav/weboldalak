@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="hu">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="nagyon jó ez az izé">
+        <title>prímek</title>
+        <style>
+            h {
+                font-size: 32px;
+                font-family: 'Courier New', Courier, monospace;
+                font-weight: bold;
+            }
+            body {
+                background-color: black;
+            }
+            p {
+                padding-bottom: 5px;
+            }
+            p {
+                font-size: 20px;
+            }
+            .q {
+                background-color: rgb(189, 73, 73);
+                position: fixed;
+                width: 20%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+            .w {
+                overflow-y: auto;
+                background-color: aqua;
+                position: fixed;
+                height: 100%;
+                width: 80%;
+                margin-left: 20%;
+                border-left: 5px solid;
+
+            }
+            .b {
+                background-color: rgb(221, 187, 114);
+                border: 2px solid gray;
+                width: 100%;
+                height: 5%;
+                margin-bottom: 5px;
+            }
+            .e {
+                margin-top: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="q">
+            <h>Prímek</h>
+            <p>legmagasabb vizsgált szám:</p>
+            <p id="prim"></p>
+            <p>plusz vizsgált szám/másodperc:</p>
+            <p id="primpers"></p>
+            <p>plusz vizsgált szám/másodperc/másodperc:</p>
+            <p id="primperss"></p>
+            <button class="b" onclick="tobb()">több vizsgálandót</button>
+            <button class="b" onclick="tobbpers()">több vizgálandót másodpercenként</button>
+            <button class="b" onclick="tobbperss()">több vizgálandót másodpercenként másodpercenként</button>
+            <a class="e" href="https://siminmindav.github.io/info/index.html">több weboldal</a>
+            <p></p>
+        </div>
+        <div class="w">
+            <div id="szamok"></div>
+        </div>
+        <script>
+            function print(id, content) {
+                document.getElementById(id).innerHTML = content;
+            }
+
+            function range(start, end, step = 1) {
+                let result = [];
+                for (let i = start; i <= end; i += step) {
+                    result.push(i);
+                }
+                return result;
+            }
+
+            function vakolas() {
+                print("prim", Math.floor(numberofprimes));
+                print("primpers", Math.floor(numberofprimespersec));
+                print("primperss", numberofprimespersecpersec);
+                let primeList = calc(Math.floor(numberofprimes));
+                text = "";
+                for (let i of primeList) {
+                    text += i + " ";
+                }
+
+                print("szamok", text);
+            }
+
+            function calc(n) {
+                let primes = [];
+                let is_prime = Array(n + 1).fill(true);
+
+                for (let p = 2; p * p <= n; p++) {
+                    if (is_prime[p]) {
+                        for (let i of range(p * p, n, p)) {
+                            is_prime[i] = false;
+                        }
+                    }
+                }
+                for (let i of range(2, n)) {
+                    if (is_prime[i]) {
+                        primes.push(i);
+                    }
+                }
+                return primes;
+            }
+
+            function tobb() {
+                numberofprimes += 1;
+                vakolas()
+            };
+            function tobbpers() {
+                numberofprimespersec += 1;
+                vakolas()
+            };
+            function tobbperss() {
+                numberofprimespersecpersec += 1;
+                vakolas()
+            };
+            function adas() {
+                numberofprimes += numberofprimespersec/100;
+                numberofprimespersec += numberofprimespersecpersec/100;
+                vakolas()
+            };
+
+            let numberofprimes = 0, numberofprimespersec = 0, numberofprimespersecpersec = 0, cycle = 0, text = "";
+
+            setInterval(adas, 10); 
+        </script>
+    </body>
+</html>
