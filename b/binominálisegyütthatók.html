@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binomial Identity Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        label, input {
+            display: block;
+            margin: 5px 0;
+            font-size: 16px;
+        }
+
+        input {
+            padding: 8px;
+            width: 80px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #222;
+            background: white;
+            padding: 15px;
+            display: inline-block;
+            border-radius: 5px;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+    </style>
+    <script>
+        function factorial(num) {
+            if (num === 0 || num === 1) return 1;
+            let result = 1;
+            for (let i = 2; i <= num; i++) {
+                result *= i;
+            }
+            return result;
+        }
+
+        function binomialCoefficient(n, k) {
+            if (k < 0 || k > n) return 0; // Handle invalid cases
+            return factorial(n) / (factorial(k) * factorial(n - k));
+        }
+
+        function calculateIdentity() {
+            let n = parseInt(document.getElementById("n").value);
+            let k = parseInt(document.getElementById("k").value);
+            let a = parseInt(document.getElementById("a").value);
+            let b = parseInt(document.getElementById("b").value);
+            let layer = parseInt(document.getElementById("layer").value);
+
+            let lhs = binomialCoefficient(n + a, k + b);
+            let rhs = 0;
+            let expandedTerms = [];
+            
+            for (let i = 0; i <= layer; i++) {
+                let term = binomialCoefficient(layer, i) * binomialCoefficient(n, k + i - Math.floor(layer / 2));
+                expandedTerms.push(`${binomialCoefficient(layer, i)} * (${n} ${k + i - Math.floor(layer / 2)})`);
+                rhs += term;
+            }
+
+            document.getElementById("result").innerHTML =
+                `(${n + a} ${k + b}) = ${expandedTerms.join(' + ')} <br>
+                ${lhs} = ${rhs}`;
+        }
+    </script>
+</head>
+<body>
+    <h2>Binomial Identity Calculator</h2>
+    <div class="container">
+        <label for="n">n:</label>
+        <input type="number" id="n" value="5">
+        <label for="k">k:</label>
+        <input type="number" id="k" value="4">
+        <label for="a">a:</label>
+        <input type="number" id="a" value="1">
+        <label for="b">b:</label>
+        <input type="number" id="b" value="1">
+        <label for="layer">Layer:</label>
+        <input type="number" id="layer" value="1" title="max:170">
+        <button onclick="calculateIdentity()">Calculate</button>
+    </div>
+    <p id="result"></p>
+</body>
+</html>
