@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document</title>
+<style>
+* {
+margin: 0;
+padding: 0;
+}
+canvas {
+border: solid 2px #000;
+}
+</style>
+</head>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.2/p5.js" integrity="sha512-U9A2hkdqQwJaC2PgtQYCAZl6OkYhJOvF86X9ibqKw1bsYnn3txJAyeRQzYwSD0qRgBUzKXdhzGUGIYzuoh4JEA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+let gridSize = 4;
+let height = 100;
+let wid = 100;
+let simulationSpeed = 250;
+let grid = [...Array(height)].map(e => Array(wid).fill(0));
+function setup() {
+createCanvas(400,400);
+}
+function draw() {
+background(220);
+if (mouseIsPressed && key !== "q") {
+let gridX = floor(mouseX / gridSize);
+let gridY = floor(mouseY / gridSize);
+if (gridX < wid - 1 && gridY < height - 1 && gridX >= 0 && gridY >= 0) {
+grid[gridY][gridX] = 1;
+}
+}
+if (mouseIsPressed && key === "q") {
+let gridX = floor(mouseX / gridSize);
+let gridY = floor(mouseY / gridSize);
+if (gridX < wid - 1 && gridY < height - 1 && gridX >= 0 && gridY >= 0) {
+grid[gridY][gridX] = 0;
+}
+}
+for (let i = 0; i < height; i++) {
+for (let j = 0; j < wid; j++) {
+// i = y coord in the grid
+// j = x coord in the grid
+// grid[y][x]
+x = j*gridSize;
+y = i*gridSize;
+if (grid[i][j] === 0) {
+noStroke();
+fill(255,255,255);
+rect(x, y, gridSize, gridSize);
+} else if (grid[i][j] === 1) {
+noStroke();
+fill(0,0,0);
+rect(x, y, gridSize, gridSize);
+}
+}
+}
+let nextGrid = [...Array(height)].map(e => Array(wid).fill(0));
+for (let i = height - 1; i >= 0; i--) {
+for (let j = 0; j < wid; j++) {
+let state = grid[i][j];
+if (state === 1) {
+if (i + 1 < height) {
+if (grid[i + 1][j] === 0) {
+nextGrid[i+1][j] = 1;
+} else if (grid[i+1][j] === 1 && grid[i+1][j+1] === 0) {
+// bottom right
+nextGrid[i+1][j+1] = 1;
+} else if (grid[i+1][j] === 1 && grid[i+1][j-1] === 0) {
+// bottom left
+nextGrid[i+1][j-1] = 1;
+} else {
+nextGrid[i][j] = 1;
+}
+} else {
+nextGrid[i][j] = 1;
+}
+}
+}
+}
+grid = nextGrid;
+}
+</script>
+</body>
+</html>

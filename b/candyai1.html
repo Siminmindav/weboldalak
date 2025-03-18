@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Candy Box Clone</title>
+  <style>
+    body {
+      font-family: monospace;
+      white-space: pre;
+      font-size: 16px;
+      margin: 20px;
+      background-color: #f8f8f8;
+    }
+    .button {
+      display: inline-block;
+      background-color: #eee;
+      border: 1px solid #999;
+      padding: 3px 8px;
+      margin: 5px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .button:hover {
+      background-color: #ddd;
+    }
+    .button.disabled {
+      color: #999;
+      cursor: not-allowed;
+    }
+    #mainDisplay {
+      margin-top: 20px;
+    }
+    .location {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="stats"></div>
+  <div id="buttons"></div>
+  <div id="mainDisplay">
+    <div id="home" class="location" style="display: block;">
+You are in your house. It's cozy here.
+    </div>
+    <div id="shop" class="location">
+Welcome to the shop! What would you like to buy?
+    </div>
+    <div id="forest" class="location">
+You are in the forest. Leaves rustle around you. 
+Maybe there are lollipops hidden here...
+    </div>
+  </div>
+
+  <script>
+    // Game state
+    const game = {
+      candies: 0,
+      lollipops: 0,
+      candiesPerSecond: 1,
+      lollipopsPerSecond: 0,
+      currentLocation: 'home',
+      
+      // Upgrades
+      upgrades: {
+        candyMachine: { owned: false, price: 100, effect: () => { game.candiesPerSecond += 5; } },
+        sugarRush: { owned: false, price: 500, effect: () => { game.candiesPerSecond *= 2; } },
+        lollipopFarm: { owned: false, price: 50, priceType: 'lollipop', effect: () => { game.lollipopsPerSecond += 0.2; } }
+      },
+      
+      // Quest flags
+      questFlags: {
+        foundForestLollipop: false,
+      },
+      
+      // Inventory
+      inventory: {
+        sword: false,
+        candyPotion: 0
+      }
+    };
+    
+    // UI Elements
+    const elements = {
+      stats: document.getElementById('stats'),
+      buttons: document.getElementById('buttons'),
+      locations: {
+        home: document.getElementById('home'),
+        shop: document.getElementById('shop'),
+        forest: document.getElementById('forest')
+      }
+    };
+    
+    // Create buttons
+    function createButton(text, onClick, condition = () => true, priceText = '') {
+      const button = document.createElement('div');
+      button.className = 'button';
+      button.innerText = text + (priceText ? ' ' + priceText : '');
+      
+      button.addEventListener('click', () => {
+        if (condition()) {
+          onClick();
+          updateUI();
+        }
+      });
+      
+      elements.buttons.appendChild(button);
+      return button;
+    }
+    
+    // Initialize buttons
+    function initButtons() {
+      // Navigation buttons
+      createButton('Go to shop', () => changeLocation('shop'));
+      createButton('Go to forest', () => changeLocation('forest'));
+      createButton('Go home', () => changeLocation('home'));
+      
+      // Action buttons
+      createButton('Eat candy', () => {
+        if (game.candies > 0) {
+          game.candies--;
+          // Small chance to find a lollipop when eating candy
+          if (Math.random() < 0.1) {
+            game.lollipops++;
+            addMessage("You found a lollipop in your candy!");
+          }
+        }
+      }, () => game.candies > 0);
+      
+      // Shop buttons
+      createButton('Buy candy machine', () => {
+        game.candies -= game.upgrades.candyMachine.price;
+        game.upgrades.candyMachine.owned = true;
+        game.upgrades.candyMachine.effect();
+      }, () => !game.upgrades.candyMachine.owned && game.candies >= game.upgrades.candyMachine.price, 
+      `(${game.upgrades.candyMachine.price} candies)`);
+      
+      createButton('Buy sugar rush', () => {
+        game.candies -= game.upgrades.sugarRush.price;
+        game.upgrades.sugarRush.owned = true;
+        game.upgrades.sugarRush.effect();
+      }, () => !game.upgrades.sugarRush.owned && game.candies >= game.upgrades.sugarRush.price,
+      `(${game.upgrades.sugarRush.price} candies)`);
+      
+      createButton('Buy lollipop farm', () => {
+        game.lollipops -= game.upgrades.lollipopFarm.price;
+        game.upgrades.lollipopFarm.owned = true;
+        game.upgrades.lollipopFarm.effect();
+      }, () => !game.upgrades.lollipopFarm.owned && game.lollipops >= game.upgrades.lollipopFarm.price,
+      `(${game.upgrades.lollipopFarm.price} lollipops)`);
+      
+      // Forest buttons
+      createButton('Search for lollipops', () => {
+        if (!game.questFlags.foundForestLollipop) {
+          game.questFlags.foundForestLollipop = true;
+          game.lollipops += 10;
+          addMessage("You found 10 lollipops hidden in the forest!");
+        } else {
+          addMessage("You already found all the lollipops here.");
+        }
+      }, () => game.currentLocation === 'forest');
+    }
+    
+    // Change location
+    function changeLocation(location) {
+      // Hide all locations
+      Object.values(elements.locations).forEach(el => {
+        el.style.display = 'none';
+      });
+      
+      // Show the new location
+      elements.locations[location].style.display = 'block';
+      game.currentLocation = location;
+    }
+    
+    // Add a message to the current location
+    function addMessage(message) {
+      const locationEl = elements.locations[game.currentLocation];
+      locationEl.innerHTML += '\n' + message;
+    }
+    
+    // Update the UI
+    function updateUI() {
+      // Update stats
+      elements.stats.innerHTML = 
+        `Candies: ${Math.floor(game.candies)} (${game.candiesPerSecond}/second)
+Lollipops: ${game.lollipops.toFixed(1)} (${game.lollipopsPerSecond.toFixed(1)}/second)`;
+      
+      // Update buttons (disable/enable based on conditions)
+      Array.from(elements.buttons.children).forEach(button => {
+        const condition = button.condition;
+        if (condition && !condition()) {
+          button.classList.add('disabled');
+        } else {
+          button.classList.remove('disabled');
+        }
+      });
+    }
+    
+    // Game loop
+    function gameLoop() {
+      const now = Date.now();
+      const elapsed = (now - game.lastUpdate) / 1000;
+      
+      // Update resources
+      game.candies += game.candiesPerSecond * elapsed;
+      game.lollipops += game.lollipopsPerSecond * elapsed;
+      
+      // Update UI
+      updateUI();
+      
+      // Schedule next update
+      game.lastUpdate = now;
+      requestAnimationFrame(gameLoop);
+    }
+    
+    // Initialize game
+    function init() {
+      game.lastUpdate = Date.now();
+      initButtons();
+      updateUI();
+      gameLoop();
+    }
+    
+    // Start the game
+    init();
+  </script>
+</body>
+</html>

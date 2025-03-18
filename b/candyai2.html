@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Candy Box 2 Clone</title>
+  <style>
+    body {
+      font-family: monospace;
+      background: #222;
+      color: #0f0;
+      margin: 0;
+      padding: 0;
+    }
+    #game {
+      width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      border: 2px solid #0f0;
+      background: #000;
+    }
+    button {
+      background: #333;
+      color: #0f0;
+      border: 1px solid #0f0;
+      padding: 5px 10px;
+      margin: 5px;
+      cursor: pointer;
+    }
+    button:disabled {
+      color: #555;
+      border-color: #555;
+      cursor: not-allowed;
+    }
+    #output {
+      margin-top: 20px;
+      height: 200px;
+      overflow-y: auto;
+      border-top: 1px solid #0f0;
+      padding-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="game">
+    <h1>Candy Box 2 Clone</h1>
+    <p id="candyCount">Candy: 0</p>
+    <button id="gather">Gather Candy</button>
+    <button id="eat">Eat Candy (cost: 10)</button>
+    <button id="quest" disabled>Start Quest (cost: 50)</button>
+    <div id="output"></div>
+  </div>
+
+  <script>
+    // Game state
+    let candy = 0;
+    const candyCount = document.getElementById("candyCount");
+    const output = document.getElementById("output");
+    const questButton = document.getElementById("quest");
+
+    // Update display and enable quest button if enough candy is available
+    function updateCandyDisplay() {
+      candyCount.textContent = "Candy: " + candy;
+      questButton.disabled = (candy < 50);
+    }
+
+    // Append a line of text to the output area
+    function log(message) {
+      output.innerHTML += message + "<br>";
+      output.scrollTop = output.scrollHeight;
+    }
+
+    // Gather candy: randomly gain between 1 and 10 candy
+    document.getElementById("gather").addEventListener("click", function(){
+      const gained = Math.floor(Math.random() * 10) + 1;
+      candy += gained;
+      log("You gathered " + gained + " candy.");
+      updateCandyDisplay();
+    });
+
+    // Eat candy: costs 10 candy to gain energy
+    document.getElementById("eat").addEventListener("click", function(){
+      if(candy >= 10){
+        candy -= 10;
+        log("You ate 10 candy and felt energized!");
+        updateCandyDisplay();
+      } else {
+        log("Not enough candy to eat!");
+      }
+    });
+
+    // Start a quest: costs 50 candy and gives a chance to win extra candy
+    questButton.addEventListener("click", function(){
+      if(candy >= 50){
+        candy -= 50;
+        log("You embarked on a quest! You encountered a mysterious creature...");
+        updateCandyDisplay();
+        // Simulate quest outcome after 2 seconds
+        setTimeout(function(){
+          const won = Math.random() < 0.5;
+          if(won){
+            const reward = Math.floor(Math.random() * 50) + 10;
+            candy += reward;
+            log("You won the quest and gained " + reward + " candy!");
+          } else {
+            log("You lost the quest, but you learned something valuable.");
+          }
+          updateCandyDisplay();
+        }, 2000);
+      }
+    });
+
+    updateCandyDisplay();
+  </script>
+</body>
+</html>
