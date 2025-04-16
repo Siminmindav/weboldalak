@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>geometriás számolások</title>
+    <style>
+        td {
+            padding: 5px;
+            font-size: 1.1em;
+        }
+        th {
+            padding: 5px;
+            background-color: #81cd9a;
+            font-size: 1.5em;
+        }
+        table {
+            border: 3px solid #203025;
+            width: 90%;
+            position: relative;
+            left: 5%;
+            animation: slidein 2s;
+            
+        }
+        h1 {
+            opacity: 0;
+            text-align: center;
+            font-size: 2.5em;
+            padding: 20px;
+            animation: fadein 2s;
+            animation-delay: 2s;
+            animation-fill-mode: forwards;
+        }
+
+        body {
+            background-color: #a6f3c0;
+            font-family: Arial, sans-serif;
+        }
+        input {
+            font-size: 1.1em;
+            background-color: #81cd9a;
+            border: 3px solid #77bd8e;
+        }
+
+        @keyframes slidein {
+            0% {
+                left: 300%;
+            }
+            100% {
+                left: 5%;
+            }
+        }
+
+        @keyframes fadein {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>geometriás számolások</h1>
+    <table>
+        <tr><th colspan="2">radián - fok</th></tr>
+        <tr><td>radián -> fok</td><td>fok -> radián</td></tr>
+        <tr><td><input id="in1" oninput="radfokf()"> -><span id="radfok"></span></td><td><input id="in2" oninput="fokradf()"> -><span id="fokrad"></span></td></tr>
+
+        <tr><th colspan="2">° ' '' - fok</th></tr>
+        <tr><td>° ' '' -> fok</td><td>fok -> ° ' ''</td></tr>
+        <tr><td><input id="in3" oninput="órafokf()"> -><span id="órafok"></span></td><td><input id="in4" oninput="fokóraf()"> -><span id="fokóra"></span></td></tr>
+
+        <tr><th colspan="2">pitagoraszi számhármasok</th></tr>
+        <tr><td>számhármas legkisebb tagja:</td><td><input id="in5" oninput="pitaf()"></td></tr>
+        <tr><td>számhármas: </td><td><span id="pita"></span></td></tr>
+    </table>
+
+    <script>
+        function print(id, text) {
+            document.getElementById(id).innerHTML = text;
+        }
+        
+        function radfokf() {
+            let radián = document.getElementById("in1").value;
+            radián = parseFloat(radián);
+            if (typeof radián === "number") {
+                let fok = radián/Math.PI*180;
+                print("radfok", fok);
+            } else {
+                print("radfok", "írj be számot");
+            }
+        }
+
+        function fokradf() {
+            let fok = document.getElementById("in2").value;
+            fok = parseFloat(fok);
+            if (typeof fok === "number") {
+                let radián = fok/180*Math.PI;
+                print("fokrad", radián);
+            } else {
+                print("fokrad", "írj be számot");
+            }
+
+        }
+
+        function órafokf() {
+            let óra = document.getElementById("in3").value.split(" ");
+            let fok = parseFloat(óra[0]);
+            let perc = parseFloat(óra[1]);
+            let másodperc = parseFloat(óra[2]);
+
+            if (óra.length === 3 && typeof fok === "number" && typeof perc === "number" && typeof másodperc === "number") {
+                let mofok = fok + perc/60 + másodperc/3600;
+                print("órafok", mofok);
+            } else {
+                print("órafok", "írj be számot így: 12, 34, 56");
+            }
+        }
+
+        function fokóraf() {
+            let fok = document.getElementById("in4").value;
+            fok = parseFloat(fok);
+            if (typeof fok === "number") {
+                let óra = Math.floor(fok);
+                let perc = Math.floor((fok - óra) * 60);
+                let másodperc = Math.floor((fok - óra - perc/60) * 3600);
+                print("fokóra", óra + "° " + perc + "' " + másodperc + "''");
+            } else {
+                print("fokóra", "írj be számot így: 12.34");
+            }
+        }
+
+        function pitaf() {
+            let n = document.getElementById("in5").value;
+            let b, c;
+            n = parseInt(n);
+            if (typeof n === "number") {
+                if (n % 2 == 0) {
+                    b = n * n / 4;
+                    c = b + 1;
+                } else{
+                    b = (n * n - 1) / 2;
+                    c = b + 1;
+                }
+                print("pita", n + ", " + b + ", " + c);
+            } else {
+                print("pita", "írj be számot");
+
+            } 
+        }
+        
+
+    </script>
+
+</body>
+</html>
