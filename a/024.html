@@ -140,8 +140,8 @@
             n = parseInt(n);
             if (typeof n === "number") {
                 if (n % 2 == 0) {
-                    b = n * n / 4;
-                    c = b + 1;
+                    b = n * n / 4 - 1;
+                    c = b + 2;
                 } else{
                     b = (n * n - 1) / 2;
                     c = b + 1;
