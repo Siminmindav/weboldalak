@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="hu">
+<!DOCTYPE html> 
+<html lang="hu"> <!--Szia Zsombi-->
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="nagyon jó ez az izé">
@@ -77,6 +77,8 @@
             <button class="b" onclick="tobb()">több vizsgálandót</button>
             <button class="b" onclick="tobbpers()">több vizsgálandót másodpercenként</button>
             <button class="b" onclick="tobbperss()">több vizsgálandót másodpercenként másodpercenként</button>
+            <button class="b" onclick="betöltés()">betöltés</button>
+            <button class="b" onclick="mentés()">mentés</button>
             <a class="e" href="https://siminmindav.github.io/info/index.html">több weboldal</a>
             <p></p>
         </div>
@@ -144,6 +146,18 @@
                 numberofprimes += numberofprimespersec/100;
                 numberofprimespersec += numberofprimespersecpersec/100;
                 vakolas()
+            };
+
+            function betöltés() {
+                numberofprimes = parseInt(localStorage.getItem("nop"));
+                numberofprimespersec = parseInt(localStorage.getItem("nopps"));
+                numberofprimespersecpersec = parseInt(localStorage.getItem("noppsps"));
+            };
+
+            function mentés() {
+                localStorage.setItem("nop", numberofprimes);
+                localStorage.setItem("nopps", numberofprimespersec);
+                localStorage.setItem("noppsps", numberofprimespersecpersec);
             };
 
             let numberofprimes = 0, numberofprimespersec = 0, numberofprimespersecpersec = 0, cycle = 0, text = "";
