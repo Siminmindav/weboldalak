@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="hu">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Ha szeretnél szerencsejátékozni akkor ez neked való!">
+        <meta name="keywords" content="szerencsejáték, játék, online, ingyenes, jó">
+        <title>Gambling Gomb</title>
+        <link rel="icon" href="fav025.png">
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #d4f2fa;
+                color: #333;
+                margin: 5px;
+            }
+            .q {
+                border: 5px solid #000;
+                background-color: #e4e4bf;
+                border-radius: 15px;
+                padding: 20px;
+                margin: 10px;
+            }
+
+            button { 
+                background-color: #d2d2a3; 
+                margin: 2px;
+                padding: 3px;
+            }
+
+            button:hover {
+                transform: scale(1.05);
+                border: 2px solid #f15006;
+            }
+
+            
+        </style>
+    </head>
+    <body>
+        <div class="q">
+            <h1>Szerencsejáték</h1>
+            <p>Pénz: <a id="pénz"></a></p>
+            <p>Gombok száma: <a id="gombszám"></a></p>
+            <button onclick="gombvevés()">Gomb: -30 pénz</button>
+            <br>
+            <button onclick="munka()">Dolgozz: +1 pénz</button>
+            <p id="event"></p>
+        </div>
+        <div id="gombok"></div>
+        <script>
+            let gombszám = 5;
+            let pénz = 10;
+            let színek = ["pink", "lightblue", "lightgreen", "yellow", "magenta","lightpink", "lightgrey", "lightyellow", "lightcyan","lightcoral", "lightgoldenrodyellow", "lightseagreen","lightsalmon", "lightsteelblue", "white","white","white","white","white","white","white","white",];
+
+            vakolás();
+
+            function szerencse() {
+                let nyeremény = Math.floor(Math.random() *6) - 3;
+                let nyeremény2 = Math.floor(Math.random() *30) - 14;
+                document.getElementById("event").innerHTML = "Nyertél: " + nyeremény + " gombot és " + nyeremény2 + " pénzt!";
+                gombszám += nyeremény;
+                pénz += nyeremény2;
+                
+
+                if (gombszám <= 0 && pénz < 30) {
+                    document.getElementById("event").innerHTML = "Szegény lettél, koldulj!";
+                    szegény();
+                    return;
+                }
+
+                if (pénz < -100 && gombszám < 10) {
+                    alert("Eladósottál kevesebb mint -100 pénzed van és nem tudsz lakbért fizetni. Kilakoltattak. :/");
+                    gombszám = 0;
+                    pénz = 0;
+                    document.getElementById("event").innerHTML = "Vesztettél!";
+                    vakolás();
+                    return;
+                }
+                vakolás();
+            }
+
+            function munka() {
+                pénz += 1;
+                document.getElementById("event").innerHTML = "Dolgoztál és kaptál 1 pénzt!";
+                document.getElementById("pénz").innerHTML = pénz;
+                if ((gombszám <= 0 && pénz < 30)) {
+                    return;
+                } else {
+                    vakolás();
+                }
+
+            }
+
+            function gombvevés() {
+                if (pénz >= 30) {
+                    gombszám++;
+                    pénz -= 30;
+                    if (gombszám <= 0 && pénz < 30) {
+                        document.getElementById("event").innerHTML = "Szegény lettél, koldulj!";
+                        szegény();
+                        return;
+                    }
+                    vakolás();
+                } else {
+                    document.getElementById("event").innerHTML = "Nincs elég pénzed!";
+                }
+            }
+
+            function vakolás() {
+                document.getElementById("pénz").innerHTML = pénz;
+                document.getElementById("gombszám").innerHTML = gombszám;
+                document.getElementById("gombok").innerHTML = "";
+
+                for (let i = 0; i < gombszám; i++) {
+                    let gomb = document.createElement("button");
+                    gomb.innerHTML = "Szerencsegomb";
+                    gomb.style.backgroundColor = színek[Math.floor(Math.random() * színek.length)];
+                    gomb.onclick = szerencse;
+                    document.getElementById("gombok").appendChild(gomb);
+                }
+            }
+
+            function szegény() {
+                document.getElementById("pénz").innerHTML = pénz;
+                document.getElementById("gombszám").innerHTML = gombszám;
+                document.getElementById("gombok").innerHTML = "";
+                let gomb = document.createElement("button");
+                gomb.innerHTML = "Koldulás";
+                gomb.style.backgroundColor = "lightgrey";
+                gomb.onclick = function() {
+                    let x = Math.floor(Math.random() * 3);
+                    if (x == 0) {
+                        document.getElementById("event").innerHTML = "Koldultál és kaptál 10 pénzt meg 5 gombot. ";
+                        gombszám += 5;
+                        pénz += 10;
+                        vakolás();
+                    } else {
+                        document.getElementById("event").innerHTML = "Koldultál és nem történt semmi.";
+                    }
+                }
+                document.getElementById("gombok").appendChild(gomb);
+                alert("Szegény lettél, koldulj!");
+            }
+        </script>
+    </body>
+</html>
