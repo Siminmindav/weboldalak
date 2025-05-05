@@ -49,6 +49,7 @@
         </div>
         <div id="gombok"></div>
         <script>
+            let veszített = 0;
             let gombszám = 5;
             let pénz = 10;
             let színek = ["pink", "lightblue", "lightgreen", "yellow", "magenta","lightpink", "lightgrey", "lightyellow", "lightcyan","lightcoral", "lightgoldenrodyellow", "lightseagreen","lightsalmon", "lightsteelblue", "white","white","white","white","white","white","white","white",];
@@ -73,6 +74,7 @@
                     alert("Eladósottál kevesebb mint -100 pénzed van és nem tudsz lakbért fizetni. Kilakoltattak. :/");
                     gombszám = 0;
                     pénz = 0;
+                    veszített = 1;
                     document.getElementById("event").innerHTML = "Vesztettél!";
                     vakolás();
                     return;
@@ -81,15 +83,18 @@
             }
 
             function munka() {
-                pénz += 1;
-                document.getElementById("event").innerHTML = "Dolgoztál és kaptál 1 pénzt!";
-                document.getElementById("pénz").innerHTML = pénz;
-                if ((gombszám <= 0 && pénz < 30)) {
-                    return;
+                if (veszített == 0) {
+                    pénz += 1;
+                    document.getElementById("event").innerHTML = "Dolgoztál és kaptál 1 pénzt!";
+                    document.getElementById("pénz").innerHTML = pénz;
+                    if ((gombszám <= 0 && pénz < 30)) {
+                        return;
+                    } else {
+                        vakolás();
+                    }
                 } else {
-                    vakolás();
+                    document.getElementById("event").innerHTML = "Nincs olyan munkáltató aki adna munkát. :/"
                 }
-
             }
 
             function pisztácia(){
