@@ -31,15 +31,28 @@
                 transform: scale(1.05);
                 border: 2px solid #f15006;
             }
+            
+            button:active {
+                transform: scale(0.95);
+            }
 
+            @media (max-width: 600px) {
+                .q {
+                    margin: 1px;
+                    border: 3px solid #000;
+                    padding: 5px;
+                    border-radius: 7px;
+                }
+                
+            }
             
         </style>
     </head>
     <body>
         <div class="q">
             <h1>Szerencsejáték</h1>
-            <p>Pénz: <a id="pénz"></a></p>
-            <p>Gombok száma: <a id="gombszám"></a></p>
+            <p>Pénz: <span id="pénz"></span></p>
+            <p>Gombok száma: <span id="gombszám"></span></p>
             <button onclick="gombvevés()">Gomb: -30 pénz</button>
             <br>
             <button onclick="munka()">Dolgozz: +1 pénz</button>
@@ -98,8 +111,21 @@
             }
 
             function pisztácia(){
+                if (veszített == 1) {
+                    document.getElementById("event").innerHTML = "Loptál egy pisztáciát. ejnye-bejnye!";
+                    return;
+                }
                 pénz -= 1;
                 document.getElementById("event").innerHTML = "Vettél pisztáciát 1 pénzért"; document.getElementById("pénz").innerHTML = pénz;
+                if (pénz < -100 && gombszám < 10) {
+                    alert("Eladósottál kevesebb mint -100 pénzed van és nem tudsz lakbért fizetni. Kilakoltattak. :/");
+                    gombszám = 0;
+                    pénz = 0;
+                    veszített = 1;
+                    document.getElementById("event").innerHTML = "Vesztettél!";
+                    vakolás();
+                    return;
+                }
             }
 
             function gombvevés() {
