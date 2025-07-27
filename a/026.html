@@ -1,14 +1,38 @@
+<!-- echo.html -->
 <!DOCTYPE html>
-
 <html>
 <head>
-  <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
-  <title>echo echo echo</title>
+  <meta charset="UTF-8">
+  <title>Echo Page</title>
 </head>
 <body>
-  <h1>
-    Hello, World!
-  </h1>
-  <iframe height="300vw" src="https://siminmindav.github.io/weboldalak/a/026.html"></iframe>
+  <h1>Hello, World!</h1>
+  <button onclick="dzs()">plusz oldal az oldalban</button>
+  <div id="frame-container"></div>
+
+  <script>
+    let max= 1;
+    function dzs(){
+      max += 1;
+      upt();
+    }
+  function upt(){
+    if (depth < max) {
+      const nextDepth = depth + 1;
+      const iframe = document.createElement("iframe");
+      iframe.src = `https://siminmindav.github.io/weboldalak/a/026.html?depth=${nextDepth}`;
+      iframe.width = "100%";
+      iframe.height = "400px";
+      document.getElementById("frame-container").appendChild(iframe);
+    }
+  }
+    // Get current depth from URL (e.g., ?depth=1)
+    const params = new URLSearchParams(window.location.search);
+    let depth = parseInt(params.get("depth")) || 0;
+
+    // Limit recursion depth
+  upt();
+    
+  </script>
 </body>
 </html>
