@@ -31,7 +31,7 @@
     // Get current depth from URL (e.g., ?depth=1)
     const params = new URLSearchParams(window.location.search);
     let depth = parseInt(params.get("depth")) || 0;
-    let max= parseInt(params.get("depth")) || 1;
+    let max= parseInt(params.get("depth")) || 0;
     document.getElementById("melyseg").innerHTML = depth;
     // Limit recursion depth
     upt();
