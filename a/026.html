@@ -2,18 +2,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <meta charset="UTF-8">
   <title>Visszhang</title>
 </head>
 <body>
   <h1>Hello, World!</h1>
+  <span>oldal mélysége:</span>
+  <span id="melyseg">0</span>
+  <br>
   <button onclick="dzs()">plusz oldal az oldalban</button>
   <div id="frame-container"></div>
 
   <script>
-    let max= 1;
     function dzs(){
       max += 1;
       upt();
@@ -31,9 +31,10 @@
     // Get current depth from URL (e.g., ?depth=1)
     const params = new URLSearchParams(window.location.search);
     let depth = parseInt(params.get("depth")) || 0;
-
+    let max= parseInt(params.get("depth")) || 1;
+    document.getElementById("melyseg").innerHTML = depth;
     // Limit recursion depth
-  upt();
+    upt();
     
   </script>
 </body>
