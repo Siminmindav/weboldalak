@@ -7,7 +7,9 @@
         <input type="number" id="in" placeholder="Hány éves vagy?" oninput="f()">
         <div id="egy"></div> 
         <div id="kettő" title="2023-ban 8,025 milliárd ember élt a földön."></div>
+        <div id="három">Ezen a weboldalon életed % töltötted el</div>
         <script>
+            let tizedmásodpercLocalStorage = Number(localStorage.getItem("tizedmpLC")) || 0;
             let tizedmásodperc = 0;
             const év = 60 * 60 * 24 * 365;
             
@@ -28,12 +30,26 @@
             };
 
             function g() {
+                let x = document.getElementById("in").value;
+
                 a("kettő",`<br>A weboldal megnyitása óta az emberiség kollektíven<br>${((tizedmásodperc/10)/(év*75/8025000000)).toFixed(0)} emberi életet élt le, vagy<br>${Number(((tizedmásodperc/10)*8025000000).toFixed(0)).toLocaleString("de-DE")} másodpercet töltött el.`);
+                if (x != 0){
+                a("három",`<br>Ezen a weboldalon jelenlegi életed ${((tizedmásodpercLocalStorage/(x*év))*100).toFixed(10)}% töltötted el.`);
+                } else {
+                a("három",`<br>Írd be a korod a fent lévő téglalapba.`);
+                };
+                
+                tizedmásodpercLocalStorage = tizedmásodpercLocalStorage + 1;
                 tizedmásodperc += 1;
+            };
+
+            function mentés(){
+                localStorage.setItem("tizedmpLC", tizedmásodpercLocalStorage);
             };
 
             f()
             setInterval(g,100);
+            setInterval(mentés,5000);
         </script>
     </body>
 </html>
