@@ -34,7 +34,7 @@
 
                 a("kettő",`<br>A weboldal megnyitása óta az emberiség kollektíven<br>${((tizedmásodperc/10)/(év*75/8025000000)).toFixed(0)} emberi életet élt le, vagy<br>${Number(((tizedmásodperc/10)*8025000000).toFixed(0)).toLocaleString("de-DE")} másodpercet töltött el.`);
                 if (x != 0){
-                a("három",`<br>Ezen a weboldalon jelenlegi életed ${((tizedmásodpercLocalStorage/(x*év))*100).toFixed(10)}% töltötted el.`);
+                a("három",`<br>Ezen a weboldalon jelenlegi életed ${(((tizedmásodpercLocalStorage/10)/(x*év))*100).toFixed(10)}% töltötted el.`);
                 } else {
                 a("három",`<br>Írd be a korod a fent lévő téglalapba.`);
                 };
