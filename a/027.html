@@ -65,6 +65,7 @@
         <br>
         <button id="drawButton" onclick="main()">színezés</button>
         <button id="random" onclick="random()">színezés véletlen szerű színekkel</button>
+        <button id="randomff" onclick="randomff()">színezés feketével vagy fehérrel</button>
         <p>Választott szín: <span id="pickedColor">(kattints egy színre)</span></p>
     </header>
 
@@ -135,6 +136,31 @@
             }
         }
 
+        function randomff(){
+            var WIDTH = document.getElementById("widthInput").value;
+            var HEIGHT = document.getElementById("heightInput").value;
+            var resulution = document.getElementById("resulutionInput").value;
+            var canvas = document.getElementById("myCanvas");
+            var ctx = canvas.getContext("2d");
+
+            canvas.width = WIDTH;
+            canvas.height = HEIGHT;
+            canvas.style.width = WIDTH + "px";
+            canvas.style.height = HEIGHT + "px";
+
+            for (var i = 0; i < resulution; i++){
+                for (var o = 0; o < resulution; o++){
+                    szám = Math.random();
+                    if (szám < 0.5){
+                        ctx.fillStyle = "rgb(0,0,0)";
+                    } else {
+                        ctx.fillStyle = "rgb(255,255,255)";
+                    }
+                    
+                    ctx.fillRect(i * (WIDTH / resulution), o * (HEIGHT / resulution), WIDTH / resulution, HEIGHT / resulution);
+                }
+            }
+        }
         main();
         pick();
     </script>
