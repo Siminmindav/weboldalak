@@ -43,41 +43,66 @@
             margin: 20px auto;
             display: block;
         }
+        .pain { /* ne légy hülye : ) */
+            font-size: 14px;
+            margin-left: 20px;
+            display: none;
+        }
         @media (max-width: 600px) {
             body {
-                font-size: 16px;
+                font-size: 14px;
                 background-color: aqua;
             }
             button {
                 font-size: 14px;
                 padding: 8px 16px;
+                margin: 5px;
             }
-            
+            .pain {
+                display: inline;   
+            }
+            header {
+                margin: 0;
+                padding: 0;
+            }
+            h1 {
+                font-size: 18px;
+                margin: 0;
+            }
         }
     </style>
 </head>
 <body>
     <header>
         <h1>Színválasztó</h1>
-        <input id="widthInput" type="number" value="400"> szélesség
-        <input id="heightInput" type="number" value="400"> magasság
-        <input id="resulutionInput" type="number" value="200"> felbontás
+        <input id="widthInput" type="number" value="300"> szélesség
+        <input id="heightInput" type="number" value="300"> magasság
+        <input id="resulutionInput" type="number" value="100"> felbontás
         <br>
-        <button id="drawButton" onclick="main()">színezés</button>
-        <button id="random" onclick="random()">színezés véletlen szerű színekkel</button>
-        <button id="randomff" onclick="randomff()">színezés feketével vagy fehérrel</button>
+        <button onclick="main()">színezés</button>
+        <button onclick="random()">színezés véletlen szerűen</button>
+        <button onclick="randomff()">színezés feketével vagy fehérrel</button>
+        <button id="rsöm" onclick="rsömfnc()">színezés véletlen szerűen sokszor</button>
+        <button id="rffsöm" onclick="rffsömfnc()">színezés feketével vagy fehérrel sokszor</button>
         <p>Választott szín: <span id="pickedColor">(kattints egy színre)</span></p>
     </header>
 
-    <canvas id="myCanvas" style="border:1px solid #000000;">
+    <canvas id="myCanvas" style="border: 1px solid rgb(0, 0, 0); width: 400px; height: 400px;" width="400" height="400">
         nincs támogatva a canvas :_(
     </canvas>
-    <footer>több menő weboldal: <a href="https://siminmindav.github.io/info/index.html">link</a></footer>
-    <script>
-        function pick(){
-            var canvas = document.getElementById("myCanvas");
-            var ctx = canvas.getContext("2d");
 
+    <footer>
+        több menő weboldal: <a href="https://siminmindav.github.io/info/index.html">link</a>
+        <span  class="pain">éredemes elforgatni a telefonodat</span>
+    </footer>
+
+    <script>
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+        var rsöm = 0;
+        var rffsöm = 0;
+
+        function pick(){
             canvas.addEventListener('click', function(event) {
                 var rect = canvas.getBoundingClientRect();
                 var x = event.clientX - rect.left;
@@ -90,18 +115,17 @@
             });
         }
 
-
         function main() {
             var WIDTH = document.getElementById("widthInput").value;
             var HEIGHT = document.getElementById("heightInput").value;
             var resulution = document.getElementById("resulutionInput").value;
-            var canvas = document.getElementById("myCanvas");
-            var ctx = canvas.getContext("2d");
 
             canvas.width = WIDTH;
             canvas.height = HEIGHT;
             canvas.style.width = WIDTH + "px";
             canvas.style.height = HEIGHT + "px";
+            var wpr = WIDTH / resulution;
+            var hpr = HEIGHT / resulution;
 
             for (var i = 0; i < resulution; i++){
                 for (var o = 0; o < resulution; o++){
@@ -111,7 +135,7 @@
                         v: o / resulution
                     };
                     ctx.fillStyle = "hsl(" + (hsv.h * 360) + ", " + (hsv.s * 100) + "%, " + (hsv.v * 50) + "%)";
-                    ctx.fillRect(i * (WIDTH / resulution), o * (HEIGHT / resulution), WIDTH / resulution, HEIGHT / resulution);
+                    ctx.fillRect(i * wpr, o * hpr, wpr, hpr);
                 }
             }
         }
@@ -120,18 +144,18 @@
             var WIDTH = document.getElementById("widthInput").value;
             var HEIGHT = document.getElementById("heightInput").value;
             var resulution = document.getElementById("resulutionInput").value;
-            var canvas = document.getElementById("myCanvas");
-            var ctx = canvas.getContext("2d");
 
             canvas.width = WIDTH;
             canvas.height = HEIGHT;
             canvas.style.width = WIDTH + "px";
             canvas.style.height = HEIGHT + "px";
+            var wpr = WIDTH / resulution;
+            var hpr = HEIGHT / resulution;
 
             for (var i = 0; i < resulution; i++){
                 for (var o = 0; o < resulution; o++){
                     ctx.fillStyle = "rgb(" + Math.floor(Math.random() * 256) + ", " + Math.floor(Math.random() * 256) + ", " + Math.floor(Math.random() * 256) + ")";
-                    ctx.fillRect(i * (WIDTH / resulution), o * (HEIGHT / resulution), WIDTH / resulution, HEIGHT / resulution);
+                    ctx.fillRect(i * wpr, o * hpr, wpr, hpr);
                 }
             }
         }
@@ -140,13 +164,14 @@
             var WIDTH = document.getElementById("widthInput").value;
             var HEIGHT = document.getElementById("heightInput").value;
             var resulution = document.getElementById("resulutionInput").value;
-            var canvas = document.getElementById("myCanvas");
-            var ctx = canvas.getContext("2d");
 
             canvas.width = WIDTH;
             canvas.height = HEIGHT;
             canvas.style.width = WIDTH + "px";
             canvas.style.height = HEIGHT + "px";
+            var szám;
+            var wpr = WIDTH / resulution;
+            var hpr = HEIGHT / resulution;
 
             for (var i = 0; i < resulution; i++){
                 for (var o = 0; o < resulution; o++){
@@ -157,12 +182,43 @@
                         ctx.fillStyle = "rgb(255,255,255)";
                     }
                     
-                    ctx.fillRect(i * (WIDTH / resulution), o * (HEIGHT / resulution), WIDTH / resulution, HEIGHT / resulution);
+                    ctx.fillRect(i * wpr, o * hpr, wpr, hpr);
                 }
             }
         }
+
+        function rsömfnc(){
+            if (rsöm == 1){
+                rsöm = 0;
+                document.getElementById("rsöm").style.backgroundColor = "rgb(255,255,255)";
+            } else {
+                rsöm = 1;
+                document.getElementById("rsöm").style.backgroundColor = "rgb(0,255,0)";
+            }
+        }
+
+        function rffsömfnc(){
+            if (rffsöm == 1){
+                rffsöm = 0;
+                document.getElementById("rffsöm").style.backgroundColor = "rgb(255,255,255)";
+            } else {
+                rffsöm = 1;
+                document.getElementById("rffsöm").style.backgroundColor = "rgb(0,255,0)";
+            }
+        }
+
+        function váltó(){
+            if (rsöm == 1){
+                random();
+            }
+            if (rffsöm == 1){
+                randomff();
+            }
+        }
+
         main();
         pick();
+        setInterval(váltó, 20);
     </script>
 </body>
 </html>
