@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Állatorvosi ló a Canvasszal</title>
+    <style>
+        body {
+            background-color: lightgray;
+        }
+        canvas {
+            border: 2px solid black;
+            background-color: white;
+        }
+        .div1 {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="div1">
+    <canvas id="C1" width="400" height="400"></canvas>
+    <canvas id="C2" width="400" height="400"></canvas>
+    <canvas id="C3" width="400" height="400"></canvas>
+    <canvas id="C4" width="400" height="400"></canvas>
+    <canvas id="C5" width="400" height="400"></canvas>
+    <canvas id="C6" width="400" height="400"></canvas>
+    <canvas id="C7" width="400" height="400"></canvas>
+    <canvas id="C8" width="400" height="400"></canvas>
+    <canvas id="C9" width="400" height="400"></canvas>
+    <canvas id="C10" width="400" height="400"></canvas>
+    <canvas id="C11" width="400" height="400"></canvas>
+    <canvas id="C12" width="400" height="400"></canvas>
+    <canvas id="C13" width="400" height="400"></canvas>
+    <canvas id="C14" width="400" height="400"></canvas>
+    <canvas id="C15" width="400" height="400"></canvas>
+    <canvas id="C16" width="400" height="400"></canvas>
+    <canvas id="C17" width="400" height="400"></canvas>
+    <canvas id="C18" width="400" height="400"></canvas>
+    <canvas id="C19" width="400" height="400"></canvas>
+    <canvas id="C20" width="400" height="400"></canvas>
+    </div>
+</body>
+<script>
+    function cf1() {
+        const c1 = document.getElementById('C1').getContext('2d');
+        
+        // Draw a rectangle
+        c1.fillStyle = 'lightblue';
+        c1.fillRect(50, 50, 300, 300);
+
+        // Draw a circle
+        c1.beginPath();
+        c1.arc(200, 200, 100, 0, Math.PI * 2, true);
+        c1.fillStyle = 'orange';
+        c1.fill();
+        c1.closePath();
+
+        // Draw some text
+        c1.fillStyle = 'black';
+        c1.font = '24px Arial';
+        c1.fillText('Állatorvosi ló', 130, 200);
+
+        // Draw a border around the canvas
+        c1.strokeStyle = 'red';
+        c1.lineWidth = 5;
+        c1.strokeRect(45, 45, 310, 310);
+
+        // Draw a out-of-bounds rectangle (it will be clipped)
+        c1.fillStyle = 'green';
+        c1.fillRect(350, 370, 50, 50);
+
+        // Draw text that goes out of bounds (it will be clipped)
+        c1.fillStyle = 'purple';
+        c1.font = '18px Arial';
+        c1.fillText('Clipped Text', 320, 390);
+
+        // Draw diagonal lines
+        c1.strokeStyle = 'blue';
+        c1.lineWidth = 3;
+        c1.beginPath();
+        c1.moveTo(0, 0);
+        c1.lineTo(400, 400);
+        c1.moveTo(400, 0);
+        c1.lineTo(0, 400);
+        c1.stroke();
+        c1.closePath();
+
+        // Label for diagonal lines
+        c1.fillStyle = 'black';
+        c1.font = '16px Arial';
+        c1.fillText('Diagonal Lines', 150, 20);
+
+        // Apply a rotation transformation & draw a rotated rectangle
+        c1.translate(0, 310); // moves along local x and y axis
+        c1.rotate(Math.PI / 4); // Rotate 45 degrees
+        c1.translate(100, -100); // still moves along local x and y axis
+        c1.fillStyle = 'pink';
+        c1.fillRect(0, 0, 50, 50);
+        c1.resetTransform(); // Reset transformations to default (u will use this a lot)
+
+        // Label for rotated rectangle
+        c1.fillStyle = 'black';
+        c1.font = '16px Arial';
+        c1.fillText('Rotated Rectangle', 10, 300);
+    }
+
+    function cf2() {
+        const c2 = document.getElementById('C2').getContext('2d');
+
+        // Draw a gradient background
+        const gradient = c2.createLinearGradient(0, 0, 400, 400);
+        gradient.addColorStop(0, 'yellow');
+        gradient.addColorStop(1, 'red');
+        c2.fillStyle = gradient;
+        c2.fillRect(0, 0, 400, 400);
+
+        // Draw a grid
+        c2.strokeStyle = 'white';
+        c2.lineWidth = 1;
+        for (let i = 0; i <= 400; i += 40) {
+            c2.beginPath();
+            c2.moveTo(i, 0);
+            c2.lineTo(i, 400);
+            c2.moveTo(0, i);
+            c2.lineTo(400, i);
+            c2.stroke();
+            c2.closePath();
+        }
+
+        // Draw overlapping circles with transparency
+        c2.fillStyle = 'rgba(0, 0, 255, 0.5)';
+        c2.beginPath();
+        c2.arc(150, 200, 80, 0, Math.PI * 2, true);
+        c2.fill();
+        c2.closePath();
+
+        c2.fillStyle = 'rgba(0, 255, 0, 0.5)';
+        c2.beginPath();
+        c2.arc(250, 200, 80, 0, Math.PI * 2, true);
+        c2.fill();
+        c2.closePath();
+
+        // Draw text with shadow
+        c2.font = '30px Arial';
+        c2.fillStyle = 'black';
+        c2.shadowColor = 'gray';
+        c2.shadowOffsetX = 4;
+        c2.shadowOffsetY = 4;
+        c2.shadowBlur = 5;
+        c2.fillText('Shadow Text', 120, 50);
+    }
+
+    function cf3() {
+        const c3 = document.getElementById('C3').getContext('2d');
+
+        // Draw a pattern background
+        const patternCanvas = document.createElement('canvas');
+        patternCanvas.width = 20;
+        patternCanvas.height = 20;
+        const pctx = patternCanvas.getContext('2d');
+        pctx.fillStyle = 'lightgray';
+        pctx.fillRect(0, 0, 20, 20);
+        pctx.moveTo(0, 0);
+        pctx.lineTo(20, 20);
+        pctx.moveTo(20, 0);
+        pctx.lineTo(0, 20);
+        pctx.strokeStyle = 'darkgray';
+        pctx.stroke();
+
+        const pattern = c3.createPattern(patternCanvas, 'repeat');
+        c3.fillStyle = pattern;
+        c3.fillRect(0, 0, 400, 400);
+
+        // Draw some shapes
+        c3.fillStyle = 'purple';
+        c3.beginPath();
+        c3.moveTo(200, 50);
+        c3.lineTo(350, 350);
+        c3.lineTo(50, 350);
+        c3.closePath();
+        c3.fill();
+
+        // Draw text along a path (approximation)
+        const text = 'Text Along Path';
+        c3.font = '20px Arial';
+        for (let i = 0; i < text.length; i++) {
+            const char = text[i];
+            const angle = (i - text.length / 2) * 0.2;
+            const x = 200 + Math.cos(angle) * 120;
+            const y = 200 + Math.sin(angle) * 120;
+            c3.save();
+            c3.translate(x, y);
+            c3.rotate(angle + Math.PI / 2);
+            c3.fillStyle = 'black';
+            c3.fillText(char, -c3.measureText(char).width / 2, 0);
+            c3.restore();
+        }
+    }
+
+    function cf4() {
+        const c4 = document.getElementById('C4').getContext('2d');
+
+        // Draw a complex shape
+        c4.fillStyle = 'teal';
+        c4.beginPath();
+        c4.moveTo(200, 50);
+        c4.bezierCurveTo(300, 0, 400, 150, 200, 350);
+        c4.bezierCurveTo(0, 150, 100, 0, 200, 50);
+        c4.fill();
+        c4.closePath();
+
+        // Draw dashed lines
+        c4.strokeStyle = 'orange';
+        c4.lineWidth = 4;
+        c4.setLineDash([10, 5]);
+        c4.beginPath();
+        c4.moveTo(50, 200);
+        c4.lineTo(350, 200);
+        c4.stroke();
+        c4.closePath();
+        c4.setLineDash([]); // Reset dash
+
+        // Draw rotated text
+        c4.save();
+        c4.translate(200, 200);
+        c4.rotate(-Math.PI / 6); // Rotate -30 degrees
+        c4.fillStyle = 'black';
+        c4.font = '28px Arial';
+        c4.fillText('Rotated Text', -80, 0);
+        c4.restore();
+    }
+
+    function cf5() {
+        const c5 = document.getElementById('C5').getContext('2d');
+
+        // Draw a radial gradient background
+        const radialGradient = c5.createRadialGradient(200, 200, 50, 200, 200, 200);
+        radialGradient.addColorStop(0, 'white');
+        radialGradient.addColorStop(1, 'lightblue');
+        c5.fillStyle = radialGradient;
+        c5.fillRect(0, 0, 400, 400);
+
+        // Draw multiple overlapping rectangles with different blend modes
+        const blendModes = ['source-over', 'multiply', 'screen', 'overlay', 'darken'];
+        const colors = ['red', 'green', 'yellow', 'cyan', 'magenta'];
+
+        for (let i = 0; i < blendModes.length; i++) {
+            c5.globalCompositeOperation = blendModes[i];
+            c5.fillStyle = colors[i];
+            c5.fillRect(50 + i * 30, 50 + i * 30, 200, 200);
+        }
+
+        // Reset to default blend mode
+        c5.globalCompositeOperation = 'source-over';
+
+        // Draw text indicating blend modes
+        c5.fillStyle = 'black';
+        c5.font = '16px Arial';
+        for (let i = 0; i < blendModes.length; i++) {
+            c5.fillText(blendModes[i], 60 + i * 30, 270 + i * 30);
+        }
+    }
+
+    function cf6() {
+        const c6 = document.getElementById('C6').getContext('2d');
+
+        // Draw fibbonaci like flower
+        const centerX = 200;
+        const centerY = 200;
+        const petals = 400;
+        const angleIncrement = Math.PI * (3 - Math.sqrt(5)); // Golden angle
+
+        for (let i = 0; i < petals; i++) {
+            const angle = i * angleIncrement;
+            const radius = Math.sqrt(i) * 10;
+
+            const x = centerX + radius * Math.cos(angle);
+            const y = centerY + radius * Math.sin(angle);
+
+            c6.fillStyle = `hsl(${(i / petals) * 360}, 100%, 50%)`;
+            c6.beginPath();
+            c6.ellipse(x, y, 8, 20, angle, 0, Math.PI * 2);
+            c6.fill();
+            c6.closePath();
+        }
+    }
+ 
+    function cf7() {
+        const c7 = document.getElementById('C7').getContext('2d');
+
+        // Draw a sine wave
+        c7.strokeStyle = 'blue';
+        c7.lineWidth = 2;
+        c7.beginPath();
+        for (let x = 0; x <= 400; x++) {
+            const y = 200 + 50 * Math.sin((x / 400) * 4 * Math.PI) + 50 * Math.sin((x / 10) * 4 * Math.PI);
+            if (x === 0) {
+                c7.moveTo(x, y);
+
+            } else {
+                c7.lineTo(x, y);
+            }
+        }
+        c7.stroke();
+        c7.closePath();
+
+        c7.strokeStyle = 'red';
+        c7.lineWidth = 2;
+        c7.beginPath();
+        for (let x = 0; x <= 400; x++) {
+            const y = (200 - (x-200)*(x-200)/50);
+            if (x === 0) {
+                c7.moveTo(x, y);
+
+            } else {
+                c7.lineTo(x, y);
+            }
+        }
+        c7.stroke();
+        c7.closePath();
+
+        // Draw axes
+        c7.strokeStyle = 'black';
+        c7.lineWidth = 1;
+        c7.beginPath();
+        c7.moveTo(0, 200);
+        c7.lineTo(400, 200);
+        c7.moveTo(200, 0);
+        c7.lineTo(200, 400);
+        c7.stroke();
+        c7.closePath();
+    }
+
+    function cf8() {
+        const c8 = document.getElementById('C8').getContext('2d');
+
+        // Draw a checkerboard pattern
+        const size = 50;
+        for (let row = 0; row < 8; row++) {
+            for (let col = 0; col < 8; col++) {
+                if ((row + col) % 2 === 0) {
+                    c8.fillStyle = 'white';
+                } else {
+                    c8.fillStyle = 'black';
+                }
+                c8.fillRect(col * size, row * size, size, size);
+            }
+        }
+    }
+
+    function cf9() {
+        //Draw triangle fractal
+        const c9 = document.getElementById('C9').getContext('2d');
+        function drawTriangle(x, y, size) {
+            c9.beginPath();
+            c9.moveTo(x, y);
+            c9.lineTo(x + size / 2, y + Math.sqrt(3) * size / 2);
+            c9.lineTo(x - size / 2, y + Math.sqrt(3) * size / 2);
+            c9.closePath();
+            c9.fill();
+        }
+        function sierpinski(x, y, size, depth) {
+            if (depth === 0) {
+                drawTriangle(x, y, size);
+            } else {
+                sierpinski(x, y, size / 2, depth - 1);
+                sierpinski(x - size / 4, y + Math.sqrt(3) * size / 4, size / 2, depth - 1);
+                sierpinski(x + size / 4, y + Math.sqrt(3) * size / 4, size / 2, depth - 1);
+            }
+        }
+        c9.fillStyle = 'black';
+        sierpinski(200, 20, 380, 6);
+    }
+
+    function cf10() {
+        const c10 = document.getElementById('C10').getContext('2d');
+
+        // Draw a starfield
+        c10.fillStyle = 'black';
+        c10.fillRect(0, 0, 400, 400);
+
+        for (let i = 0; i < 200; i++) {
+            const x = Math.random() * 400;
+            const y = Math.random() * 400;
+            const radius = Math.random() * 1.5 + 0.5;
+
+            c10.fillStyle = 'white';
+            c10.beginPath();
+            c10.arc(x, y, radius, 0, Math.PI * 2, true);
+            c10.fill();
+            c10.closePath();
+        }
+    }
+
+    function cf11() {
+        const c11 = document.getElementById('C11').getContext('2d');
+
+        // Draw concentric circles
+        for (let i = 0; i < 10; i++) {
+            c11.strokeStyle = `hsl(${i * 36}, 100%, 50%)`;
+            c11.lineWidth = 5;
+            c11.beginPath();
+            c11.arc(200, 200, i * 20 + 10, 0, Math.PI * 2, true);
+            c11.stroke();
+            c11.closePath();
+        }
+    }
+
+    function cf12() {
+        const c12 = document.getElementById('C12').getContext('2d');
+
+        // Draw random lines
+        for (let i = 0; i < 50; i++) {
+            const x1 = Math.random() * 400;
+            const y1 = Math.random() * 400;
+            const x2 = Math.random() * 400;
+            const y2 = Math.random() * 400;
+
+            c12.strokeStyle = `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
+            c12.lineWidth = Math.random() * 5 + 1;
+            c12.beginPath();
+            c12.moveTo(x1, y1);
+            c12.lineTo(x2, y2);
+            c12.stroke();
+            c12.closePath();
+        }
+    }
+
+    function cf13() {
+        const c13 = document.getElementById('C13').getContext('2d');
+
+        var balls = [];
+        for (let i = 0; i < 50; i++) {
+            balls.push({
+                x: Math.random() * 400,
+                y: Math.random() * 400,
+                vx: (Math.random() - 0.5) * 0.1,
+                vy: (Math.random() - 0.5) * 0.1,
+                radius: Math.random() * 15 + 30,
+                color: `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8)`
+            });
+        
+        function draw() {
+            c13.clearRect(0, 0, 400, 400);
+            for (let ball of balls) {
+                ball.x += ball.vx;
+                ball.y += ball.vy;  
+                if (ball.x + ball.radius > 400 || ball.x - ball.radius < 0) {
+                    ball.vx *= -1;
+                }
+                if (ball.y + ball.radius > 400 || ball.y - ball.radius < 0) {
+                    ball.vy *= -1;
+                }
+                c13.fillStyle = ball.color;
+                c13.beginPath();
+                c13.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2, true);
+                c13.fill();
+                c13.closePath();
+            }
+            requestAnimationFrame(draw);
+        }
+        draw();
+    }}
+                      
+    function cf14() {
+        // Draw 3d rotating doughnut
+        const c14 = document.getElementById('C14').getContext('2d');
+        let angleX = 0;
+        let angleY = 0;
+        const R = 100;
+        const r = 40;
+        function draw() {
+            c14.clearRect(0, 0, 400, 400);
+            const points = [];
+            for (let theta = 0; theta < 2 * Math.PI; theta += 0.05) {
+                for (let phi = 0; phi < 2 * Math.PI; phi += 0.05) {
+                    let x = (R + r * Math.cos(theta)) * Math.cos(phi);
+                    let y = (R + r * Math.cos(theta)) * Math.sin(phi);
+                    let z = r * Math.sin(theta);
+                    // Rotate around X axis
+                    let y1 = y * Math.cos(angleX) - z * Math.sin(angleX);
+                    let z1 = y * Math.sin(angleX) + z * Math.cos(angleX);
+                    y = y1;
+                    z = z1;
+                    // Rotate around Y axis
+                    let x1 = x * Math.cos(angleY) + z * Math.sin(angleY);
+                    let z2 = -x * Math.sin(angleY) + z * Math.cos(angleY);
+                    x = x1;
+                    z = z2;
+                    const scale = 200 / (200 + z);
+                    const x2d = 200 + x * scale;
+                    const y2d = 200 + y * scale;
+                    points.push({x: x2d, y: y2d, z: z});
+                }
+            }
+            points.sort((a, b) => b.z - a.z);
+            for (let p of points) {
+                const brightness = Math.min(Math.max((p.z + r) / (2 * r), 0), 1);
+                const gray = Math.floor(brightness * 255);
+                c14.fillStyle = `rgb(${gray}, ${gray}, ${gray})`;
+                c14.fillRect(p.x, p.y, 2, 2);
+            }
+            angleX += 0.01;
+            angleY += 0.01;
+            requestAnimationFrame(draw);
+        }
+        draw();
+    }
+
+    function cf15() {
+        // Draw animated plasma effect
+        const c15 = document.getElementById('C15').getContext('2d');
+        let time = 0;
+        function draw() {
+            const imageData = c15.createImageData(400, 400);
+            for (let x = 0; x < 400; x++) {
+                for (let y = 0; y < 400; y++) {
+                    const value = Math.floor(128 + (128 * Math.sin(x / 20 + time) + 128 * Math.sin(y / 20 + time) + 128 * Math.sin((x + y) / 20 + time)) / 3);
+                    const index = (x + y * 400) * 4;
+                    imageData.data[index] = value;      // R
+                    imageData.data[index + 1] = value;  // G
+                    imageData.data[index + 2] = value;  // B
+                    imageData.data[index + 3] = 255;    // A
+                }
+            }
+            c15.putImageData(imageData, 0, 0);
+            time += 0.1;
+            requestAnimationFrame(draw);
+        }
+        draw();
+    }
+
+    function cf16() {
+        // Draw a Mandelbrot set
+        const c16 = document.getElementById('C16').getContext('2d');
+        const width = 400;
+        const height = 400;
+        const maxIter = 10;
+
+        for (let x = 0; x < width; x++) {
+            for (let y = 0; y < height; y++) {
+                let zx = 0;
+                let zy = 0;
+                const cx = (x - width / 2) * 4 / width;
+                const cy = (y - height / 2) * 4 / height;
+                let iter = 0;
+
+                while (zx * zx + zy * zy < 4 && iter < maxIter) {
+                    const xtemp = zx * zx - zy * zy + cx;
+                    zy = 2 * zx * zy + cy;
+                    zx = xtemp;
+                    iter++;
+                }
+
+                const color = iter === maxIter ? 0 : Math.floor(255 * iter / maxIter);
+                c16.fillStyle = `rgb(${color}, ${color}, ${color})`;
+                c16.fillRect(x, y, 1, 1);
+            }
+        }
+    }
+
+    function cf17() {
+        // simulation
+        const canvas17 = document.getElementById('C17');
+        const c17 = canvas17.getContext('2d');
+        const blobs = [];
+        const BLobs = 14;
+        const W = 400, H = 400;
+
+        for (let i = 0; i < BLobs; i++) {
+            blobs.push({
+            x: Math.random() * W,
+            y: Math.random() * H,
+            vx: (Math.random() - 0.5) * 2,
+            vy: (Math.random() - 0.5) * 2,
+            r: 30 + Math.random() * 50,
+            h: Math.floor(Math.random() * 360)
+            });
+        }
+
+        let mx = null, my = null;
+        canvas17.addEventListener('mousemove', (e) => {
+            const rect = canvas17.getBoundingClientRect();
+            mx = e.clientX - rect.left;
+            my = e.clientY - rect.top;
+        });
+        canvas17.addEventListener('mouseleave', () => { mx = my = null; });
+
+        function drawBlob(b) {
+            const g = c17.createRadialGradient(b.x, b.y, b.r * 0.1, b.x, b.y, b.r);
+            g.addColorStop(0, `hsla(${b.h}, 90%, 60%, 0.95)`);
+            g.addColorStop(0.4, `hsla(${b.h}, 80%, 55%, 0.6)`);
+            g.addColorStop(1, 'rgba(0,0,0,0)');
+            c17.fillStyle = g;
+            c17.beginPath();
+            c17.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+            c17.fill();
+        }
+
+        let t = 0;
+        function step() {
+            // background
+            c17.fillStyle = 'rgba(10,14,20,1)';
+            c17.fillRect(0, 0, W, H);
+
+            // draw metaballs with additive blending to create 'liquid' merge
+            c17.globalCompositeOperation = 'lighter';
+
+            for (let b of blobs) {
+            // small sinus wobble for organic motion
+            b.vx += Math.sin(t * 0.01 + b.h) * 0.01;
+            b.vy += Math.cos(t * 0.01 + b.h) * 0.01;
+
+            // mouse attraction (soft)
+            if (mx !== null && my !== null) {
+                const dx = mx - b.x;
+                const dy = my - b.y;
+                const dist2 = dx * dx + dy * dy + 0.001;
+                const f = 20000 / dist2; // attraction magnitude
+                b.vx += dx * f * 0.0005;
+                b.vy += dy * f * 0.0005;
+            }
+
+            b.x += b.vx;
+            b.y += b.vy;
+
+            // simple boundary collision with slight damping
+            if (b.x - b.r < 0) { b.x = b.r; b.vx *= -0.7; }
+            if (b.x + b.r > W) { b.x = W - b.r; b.vx *= -0.7; }
+            if (b.y - b.r < 0) { b.y = b.r; b.vy *= -0.7; }
+            if (b.y + b.r > H) { b.y = H - b.r; b.vy *= -0.7; }
+
+            // mild inter-blob repulsion to avoid total collapse
+            for (let b2 of blobs) {
+                if (b === b2) continue;
+                const dx = b.x - b2.x;
+                const dy = b.y - b2.y;
+                const d2 = dx * dx + dy * dy;
+                const minD = (b.r + b2.r) * 0.25;
+                if (d2 > 0 && d2 < minD * minD) {
+                const inv = 0.5 / Math.sqrt(d2);
+                b.vx += dx * inv * 0.02;
+                b.vy += dy * inv * 0.02;
+                }
+            }
+
+            drawBlob(b);
+            }
+
+            // subtle overlay to smooth appearance
+            c17.globalCompositeOperation = 'source-over';
+            c17.fillStyle = 'rgba(10,14,20,0.05)';
+            c17.fillRect(0, 0, W, H);
+
+            t++;
+            requestAnimationFrame(step);
+        }
+
+        step();
+
+    }
+
+    function cf18() {
+        // fireworks
+        const c18 = document.getElementById('C18').getContext('2d');
+        const particles = [];
+        const numParticles = 100;
+        const W = 400, H = 400;
+
+        for (let i = 0; i < numParticles; i++) {
+            particles.push({
+                x: W / 2,
+                y: H / 2,
+                vx: (Math.random() - 0.5) * 6,
+                vy: (Math.random() - 0.5) * 6,
+                life: Math.random() * 100 + 50,
+                size: Math.random() * 3 + 2,
+                color: `hsl(${Math.random() * 360}, 100%, 50%)`
+            });
+        }
+
+        function draw() {
+            c18.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            c18.fillRect(0, 0, W, H);
+
+            for (let p of particles) {
+                if (p.life > 0) {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.05; // gravity
+                    p.life--;
+
+                    c18.fillStyle = p.color;
+                    c18.beginPath();
+                    c18.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    c18.fill();
+                    c18.closePath();
+                }
+            }
+
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+        setInterval(() => {
+            for (let i = 0; i < numParticles; i++){
+            particles.push({
+                x: W / 2,
+                y: H / 2,
+                vx: (Math.random() - 0.5) * 6,
+                vy: (Math.random() - 0.5) * 6,
+                life: Math.random() * 100 + 50,
+                size: Math.random() * 3 + 2,
+                color: `hsl(${Math.random() * 360}, 100%, 50%)`
+            })};
+        }, 3000);
+    }
+
+    function cf19() {
+        //Draw a clock
+        function f(){
+            const c19 = document.getElementById('C19').getContext('2d');
+            time = new Date().toLocaleTimeString();
+            hour = time.split(":")[0];
+            minute = time.split(":")[1];
+            second = time.split(":")[2];
+            c19.clearRect(0,0,400,400);
+            c19.fillStyle = 'white';
+            c19.beginPath();
+            c19.arc(200,200,150,0,Math.PI*2);
+            c19.fill();
+            c19.closePath();
+            c19.fillStyle = 'black';
+            c19.font = '30px Arial';
+            for (let i=1;i<=12;i++){
+                let x = 200 + Math.cos((i-3)*Math.PI/6)*120;
+                let y = 200 + Math.sin((i-3)*Math.PI/6)*120;
+                c19.fillText(i,x-10,y+10);
+            }
+            //hour hand
+            c19.strokeStyle = 'black';
+            c19.lineWidth = 8;
+            c19.beginPath();
+            let hourAngle = ((hour%12)+minute/60)*Math.PI/6 - Math.PI/2;
+            c19.moveTo(200,200);
+            c19.lineTo(200 + Math.cos(hourAngle)*80, 200 + Math.sin(hourAngle)*80);
+            c19.stroke();
+            c19.closePath();
+            //minute hand
+            c19.strokeStyle = 'black';
+            c19.lineWidth = 5;
+            c19.beginPath();
+            let minuteAngle = (minute+second/60)*Math.PI/30 - Math.PI/2;
+            c19.moveTo(200,200);
+            c19.lineTo(200 + Math.cos(minuteAngle)*120, 200 + Math.sin(minuteAngle)*120);
+            c19.stroke();
+            c19.closePath();
+            //second hand
+            c19.strokeStyle = 'red';
+            c19.lineWidth = 2;
+            c19.beginPath();
+            let secondAngle = second*Math.PI/30 - Math.PI/2;
+            c19.moveTo(200,200);
+            c19.lineTo(200 + Math.cos(secondAngle)*140, 200 + Math.sin(secondAngle)*140);
+            c19.stroke();
+            c19.closePath();
+        };
+        f();
+        setInterval(f,1000);
+    }
+
+    function cf20() {
+        // Draw slither io like snake
+        const c20 = document.getElementById('C20').getContext('2d');
+        const W = 400, H = 400;
+        let snake = [];
+        let speed = 3;
+        const snakeLength = 300;
+        for (let i = 0; i < snakeLength; i++) {
+            snake.push({x: W / 2 - i * 10, y: H / 2});
+        }
+        let direction = {x: 1, y: 0};
+        document.addEventListener('mousemove', (e) => {
+            const rect = c20.canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+            const head = snake[0];
+            const dx = mouseX - head.x;
+            const dy = mouseY - head.y;
+            const length = Math.sqrt(dx * dx + dy * dy);
+            direction.x = dx / length;
+            direction.y = dy / length;
+
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "Shift") {
+                if (speed === 10) speed = 3;
+                else speed = 10;
+                console.log("speed up");
+            }
+        });
+        function draw() {
+            c20.fillStyle = 'lightgray';
+            c20.fillRect(0, 0, W, H);
+
+            // Move snake
+            if (snake[0].x < 0) snake[0].x = W;
+            if (snake[0].x > W) snake[0].x = 0;
+            if (snake[0].y < 0) snake[0].y = H;
+            if (snake[0].y > H) snake[0].y = 0;
+            const head = {x: snake[0].x + direction.x * speed, y: snake[0].y + direction.y * speed};
+            snake.unshift(head);
+            snake.pop();
+
+            // Draw snake
+            for (let i = 0; i < snake.length; i++) {
+                c20.fillStyle = `hsl(${(i / snake.length) * 360}, 100%, 50%)`;
+                c20.beginPath();
+                c20.arc(snake[i].x, snake[i].y, 8, 0, Math.PI * 2);
+                c20.fill();
+                c20.closePath();
+            }
+
+            requestAnimationFrame(draw);
+        }
+        draw();   
+    }
+
+
+
+    cf20();
+    cf19();
+    cf18();
+    cf17();
+    cf16();
+    cf15();
+    cf14();
+    cf13();
+    cf12();
+    cf11();
+    cf10();
+    cf9();
+    cf8();
+    cf7();
+    cf6();
+    cf5();
+    cf4();
+    cf3();
+    cf2();
+    cf1();
+</script>
+</html>
