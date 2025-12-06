@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code generator for miner gun builder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #b69a9a;
+            align-items: center;
+        }
+        input {
+            margin-right: 10px;
+            padding: 5px;
+            width: 300px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #400606;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 100px rgba(0, 0, 0, 0.1);
+        }
+        .bottom {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+    <h1>Welcome to the Miner Gun Builder code generator page</h1>
+    <p>This is a HTML page for alliance code generation.</p>
+    <p>Enter your code:</p>
+    <button onclick="inputfromclipboard()">import code from clipboard</button>
+    <br>
+    <input type="text" id="codeInput" placeholder="Enter code here">
+    <button onclick="generateCode()">Generate</button>
+    <p>Generated Code:</p>
+    <p id="output"></p>
+    <button onclick="outputoclipboard()">copy to clipboard</button>
+    <a href="https://play.google.com/store/apps/details?id=com.GermapurApps.MinerGunBuilder" class="bottom">what is mgb?</a>
+    </div>
+    <script>
+        // Change your invite code, and run this as many times as you want.
+        function generateCode() {
+            var ic = document.getElementById("codeInput").value;
+            x = generateCode(ic);
+            console.log(x);
+
+            function getEven(f) {
+            var e = [ 8,12,15,2,14,3,5,1,7,13,11,9,10,4,6,0];
+            return e[parseInt(f,16)];
+            }
+            function getOdd(f) {
+            var o = [ 15,7,3,5,13,6,14,8,0,11,12,10,1,9,4,2];
+            return o[parseInt(f,16)];
+            }
+
+            function getRand() {
+            var rand = "";
+            // return "a06930b8c3e997d305ab984acd978248";
+            for (var i = 0; i < 32; i++) {
+                var f = Math.floor(Math.random() * 16).toString(16);
+                rand += f;
+            }
+            return rand;
+            }
+
+            function generateCode(invitationCode) {
+            var m = [ 1,6,0,7,"e",8,"f","d","b",5,2,"c",3,"a",9,4];
+            let base = invitationCode.split("").map(function (a) { return m[parseInt(a,16)]; }).join("");
+            var rand = getRand();
+            var r = rand.split("").reverse();
+            for (var i = 0; i < 32; i++) {
+                var f = r[i];
+                if (i % 2 == 1) {
+                rand += getEven(f).toString(16);
+                } else {
+                rand += getOdd(f).toString(16);
+                }
+            }
+            var code = "";
+            for (var i = 0; i < 64; i++) {
+                code += base[i] + rand[i];
+            }
+            document.getElementById("output").innerText = code;
+            }
+        }
+        async function inputfromclipboard() {
+            try {
+                const text = await navigator.clipboard.readText();
+                document.getElementById("codeInput").value = text;
+            } catch (err) {
+                console.error('Failed to read clipboard contents: ', err);
+            }
+        }
+        async function outputoclipboard() {
+            try {
+                const text = document.getElementById("output").innerText;
+                await navigator.clipboard.writeText(text);
+            } catch (err) {
+                console.error('Failed to write to clipboard: ', err);
+            }
+        }
+
+
+    </script>
+
+</body>
+</html>
