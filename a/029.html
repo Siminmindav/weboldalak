@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Teljesítmény tesztelő</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+	body {
+		font-family: sans-serif;
+		background-color: lightyellow;
+	}
+	button {
+		position: fixed;
+		font-size: 16px;
+		padding: 10px;
+		margin-top: 10px;
+		background-color: tan;
+		border: 2px solid black;
+	}
+	button:hover {
+		color: rgb(61, 42, 7);
+		background-color: rgb(177, 152, 118);
+	}
+	.számoló {
+		position: fixed;
+		border: 2px solid black;
+		background-color: tan;
+		padding: 10px;
+		margin-top: 70px;
+	}
+	.centered {
+		margin-left: 10px;
+		text-align: center;
+	}
+
+</style>
+</head>
+<body>
+
+
+
+<button onclick="f()" title="1.6180339887-tel szorzó">Nincs elég "John Doe"</button>
+<p id="számoló" class="számoló">jelenleg <b>100</b> 'John Doe' vagy "John Doe" van</p>
+
+<div class="centered">
+	<h2>Teljesítmény tesztelő</h2>
+	<p>Te meddig tudsz eljutni?</p>
+	<p id="max">Ha ezt látod, nem müködik a javascript</p>
+	<p id="memory">ezt sem kéne látnod</p>
+</div>
+
+<p id="demo">Szia Zsombi!</p>
+
+<script>
+let text = " John Doe";
+let currentNumber = 100;
+let maxNumber = localStorage.getItem("maxNumber");
+let result = text.repeat(currentNumber);
+let memoryUsage = (new Blob([result])).size / (1024);
+document.getElementById("demo").innerHTML = result;
+document.getElementById("max").innerHTML = 'Az eszköz maximális kapacitása: <b>' + maxNumber.toLocaleString("de") + '</b> \'John Doe\' vagy "John Doe"';
+document.getElementById("memory").innerHTML = 'Az eszköz eddigi memóriahasználata: <b>' + memoryUsage.toFixed(4).replace(".", ",") + '</b> KB';
+function f() {
+	currentNumber = Math.floor(currentNumber * 1.6180339887);
+	result = text.repeat(currentNumber);
+	
+	document.getElementById("demo").innerHTML = result;
+	document.getElementById("számoló").innerHTML = 'jelenleg <b>' + currentNumber.toLocaleString("de") + '</b> \'John Doe\' vagy "John Doe" van';
+
+	if (currentNumber > maxNumber) {
+		localStorage.setItem("maxNumber", currentNumber);
+		maxNumber = currentNumber;
+	}
+	document.getElementById("max").innerHTML = 'Az eszköz maximális kapacitása: <b>' + maxNumber.toLocaleString("de") + '</b> \'John Doe\' vagy "John Doe"';
+
+	memoryUsage = (new Blob([result])).size / (1024);
+	document.getElementById("memory").innerHTML = 'Az eszköz eddigi memóriahasználata: <b>' + memoryUsage.toFixed(4).replace(".", ",") + '</b> KB';
+}
+</script>
+
+</body>
+</html>
