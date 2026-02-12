@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Wolfenstein – Smart Connected Chunks</title>
+<style>
+html,body{
+  margin:0;
+  background:black;
+  height:100%;
+  overflow:hidden;
+}
+canvas{
+  display:block;
+  margin:auto;
+  width:100vw;
+  height:100vh;
+  image-rendering:pixelated;
+}
+</style>
+</head>
+<body>
+<canvas id="game"></canvas>
+
+<script>
+/* ================= CONFIG ================= */
+const INTERNAL_WIDTH = 1280;
+const INTERNAL_HEIGHT = 800;
+
+const MAP_W = 120;
+const MAP_H = 90;
+const CHUNK_SIZE = 6;
+
+const MOVE_SPEED = 3;
+const ROT_SPEED = 2;
+
+// anti-repetition limits
+const MAX_HALL_CHAIN = 2;
+const MAX_INTERSECTION_CLUSTER = 1;
+
+const MAX_HALL_COUNT = 90;
+const MAX_INTERSECTION_COUNT = 90;
+let hallCount=0, intersectionCount=0;
+
+/* ================= CANVAS ================= */
+const canvas = document.getElementById("game");
+canvas.width = INTERNAL_WIDTH;
+canvas.height = INTERNAL_HEIGHT;
+const ctx = canvas.getContext("2d");
+
+/* ================= WALL COLORS ================= */
+const WALL_COLORS = {
+  1:[200,50,50],
+  2:[200,200,50],
+  3:[50,50,200],
+  4:[50,200,50],
+  5:[160,50,160],
+};
+
+/* ================= INPUT ================= */
+const keys = {};
+let showMap=false;
+window.addEventListener("keydown",e=>{
+  keys[e.key]=true;
+  if(e.key==="Home") resetGame();
+  if(e.key.toLowerCase()==="m") showMap=!showMap;
+});
+window.addEventListener("keyup",e=>keys[e.key]=false);
+
+/* ================= CHUNKS ================= */
+const CHUNKS = [
+  {
+    name: "hall",
+    type: "hall",
+    // exits: { N, E, S, W } (true = open, false = closed)
+    exits: { N: true, E: true, S: true, W: true },
+    // tiles: 6 rows x 6 cols. '.' = floor, '#' = wall
+    tiles: [
+      ".......",
+      "......",
+      "......",
+      "......",
+      "......",
+      "......"
+    ]
+  },
+  {
+    name: "corridor",
+    type: "corridor",
+    exits: { N: true, E: false, S: true, W: false },
+    tiles: [
+      "##..##",
+      "##..##",
+      "##..##",
+      "##..##",
+      "##..##",
+      "##..##"
+    ]
+  },
+  {
+    name: "corridor2",
+    type: "corridor2",
+    exits: { N: false, E: true, S: false, W: true },
+    tiles: [
+      "######",
+      "######",
+      "......",
+      "......",
+      "######",
+      "######"
+    ]
+  },
+  {
+    name: "turn",
+    type: "turn1",
+    exits: { N: true, E: true, S: false, W: false },
+    tiles: [
+      "##..##",
+      "##..##",
+      "##....",
+      "##....",
+      "######",
+      "######"
+    ]
+  },
+  {
+    name: "turn",
+    type: "turn2",
+    exits: { N: false, E: true, S: true, W: false },
+    tiles: [
+      "######",
+      "######",
+      "##....",
+      "##....",
+      "##..##",
+      "##..##"
+    ]
+  },
+  {
+    name: "turn",
+    type: "turn3",
+    exits: { N: false, E: false, S: true, W: true },
+    tiles: [
+      "######",
+      "######",
+      "....##",
+      "....##",
+      "##..##",
+      "##..##"
+    ]
+  },
+  {
+    name: "turn",
+    type: "turn4",
+    exits: { N: true, E: false, S: false, W: true },
+    tiles: [
+      "##..##",
+      "##..##",
+      "....##",
+      "....##",
+      "######",
+      "######"
+    ]
+  },
+  {
+    name: "intersection",
+    type: "intersection",
+    exits: { N: true, E: true, S: true, W: true },
+    tiles: [
+      "##..##",
+      "......",
+      "..##..",
+      "..##..",
+      "......",
+      "##..##"
+    ]
+  },
+  {
+    name: "deadend",
+    type: "deadend",
+    exits: { N: true, E: false, S: false, W: false },
+    tiles: [
+      "##..##",
+      "##..##",
+      "######",
+      "######",
+      "######",
+      "######"
+    ]
+  }
+];
+
+/* ================= GAME STATE ================= */
+let map,posX,posY,dirX,dirY,planeX,planeY;
+
+/* ================= MAP GENERATION ================= */
+function generateMap(){
+  const m = Array.from({length:MAP_H},()=>Array(MAP_W).fill(1));
+  const cxCount=MAP_W/CHUNK_SIZE;
+  const cyCount=MAP_H/CHUNK_SIZE;
+  const placed=Array.from({length:cyCount},()=>Array(cxCount).fill(null));
+
+  for(let cy=0;cy<cyCount;cy++){
+    for(let cx=0;cx<cxCount;cx++){
+      const options=CHUNKS.filter(c=>fits(c,cx,cy,placed));
+      const chunk=options.length
+        ? options[Math.random()*options.length|0]
+        : null;
+      placed[cy][cx]=chunk;
+      if(chunk) drawChunk(m,cx,cy,chunk);
+    }
+  }
+
+  connectRegions(m);
+  sealAndColor(m);
+  return m;
+}
+
+function fits(chunk,cx,cy,placed){
+  const n=placed[cy-1]?.[cx];
+  const s=placed[cy+1]?.[cx];
+  const w=placed[cy]?.[cx-1];
+  const e=placed[cy]?.[cx+1];
+
+  if(n && chunk.exits.N!==n.exits.S) return false;
+  if(s && chunk.exits.S!==s.exits.N) return false;
+  if(w && chunk.exits.W!==w.exits.E) return false;
+  if(e && chunk.exits.E!==e.exits.W) return false;
+
+  // repetition limits
+  if(chunk.type==="hall"){
+    let count=0;
+    if(w?.type==="hall") count++;
+    if(e?.type==="hall") count++;
+    if(count>=MAX_HALL_CHAIN) return false;
+  }
+
+  if(chunk.type==="intersection"){
+    let count=0;
+    if(n?.type==="intersection") count++;
+    if(s?.type==="intersection") count++;
+    if(w?.type==="intersection") count++;
+    if(e?.type==="intersection") count++;
+    if(count>MAX_INTERSECTION_CLUSTER) return false;
+  }
+
+  if (chunk.type==="hall" && hallCount>=MAX_HALL_COUNT) return false;
+  if (chunk.type==="hall") hallCount++;
+  if (chunk.type==="intersection" && intersectionCount>=MAX_INTERSECTION_COUNT) return false;
+  if (chunk.type==="intersection") intersectionCount++;
+
+  if (chunk.name==="turn" && Math.random()<0.2) return false;
+
+  return true;
+}
+
+function drawChunk(m,cx,cy,chunk){
+  for(let y=0;y<CHUNK_SIZE;y++)
+    for(let x=0;x<CHUNK_SIZE;x++)
+      m[cy*CHUNK_SIZE+y][cx*CHUNK_SIZE+x] =
+        chunk.tiles[y][x]==="." ? 0 : 1;
+}
+
+/* ================= CONNECTIVITY ================= */
+function connectRegions(m){
+  const visited=Array.from({length:MAP_H},()=>Array(MAP_W).fill(false));
+  const regions=[];
+
+  for(let y=0;y<MAP_H;y++){
+    for(let x=0;x<MAP_W;x++){
+      if(m[y][x]===0 && !visited[y][x]){
+        const region=[];
+        flood(x,y,visited,m,region);
+        regions.push(region);
+      }
+    }
+  }
+
+  for(let i=1;i<regions.length;i++){
+    carveTunnel(regions[0][0],regions[i][0],m);
+  }
+}
+
+function flood(x,y,vis,m,reg){
+  const stack=[[x,y]];
+  vis[y][x]=true;
+  while(stack.length){
+    const [cx,cy]=stack.pop();
+    reg.push([cx,cy]);
+    [[1,0],[-1,0],[0,1],[0,-1]].forEach(([dx,dy])=>{
+      const nx=cx+dx, ny=cy+dy;
+      if(nx>=0&&ny>=0&&nx<MAP_W&&ny<MAP_H&&!vis[ny][nx]&&m[ny][nx]===0){
+        vis[ny][nx]=true;
+        stack.push([nx,ny]);
+      }
+    });
+  }
+}
+
+function carveTunnel(a,b,m){
+  let [x,y]=a;
+  while(x!==b[0]){
+    m[y][x]=0;
+    x+=Math.sign(b[0]-x);
+  }
+  while(y!==b[1]){
+    m[y][x]=0;
+    y+=Math.sign(b[1]-y);
+  }
+}
+
+/* ================= FINALIZE ================= */
+function sealAndColor(m){
+  for(let y=0;y<MAP_H;y++)
+    for(let x=0;x<MAP_W;x++){
+      if(x===0||y===0||x===MAP_W-1||y===MAP_H-1) m[y][x]=1;
+      if(m[y][x]===1) m[y][x]=1+(Math.random()*5|0);
+    }
+}
+
+/* ================= RESET ================= */
+function resetGame(){
+  map=generateMap();
+  hallCount=0; intersectionCount=0;
+  do{
+    posX=Math.random()*MAP_W;
+    posY=Math.random()*MAP_H;
+  }while(map[posY|0][posX|0]!==0);
+  dirX=-1; dirY=0; planeX=0; planeY=0.7;
+}
+
+/* ================= LOOP ================= */
+let last=performance.now();
+resetGame();
+requestAnimationFrame(loop);
+function loop(t){
+  const dt=(t-last)/1000; last=t;
+  update(dt); render();
+  requestAnimationFrame(loop);
+}
+
+/* ================= UPDATE ================= */
+function update(dt){
+  const m=MOVE_SPEED*dt, r=ROT_SPEED*dt;
+  if(keys.w) move(dirX*m,dirY*m);
+  if(keys.s) move(-dirX*m,-dirY*m);
+  const px=dirY, py=-dirX;
+  if(keys.a) move(-px*m,-py*m);
+  if(keys.d) move(px*m,py*m);
+  if(keys.ArrowLeft) rotate(-r);
+  if(keys.ArrowRight) rotate(r);
+}
+function move(dx,dy){
+  if(map[posY|0][(posX+dx)|0]===0) posX+=dx;
+  if(map[(posY+dy)|0][posX|0]===0) posY+=dy;
+}
+function rotate(a){
+  const c=Math.cos(a), s=Math.sin(a);
+  [dirX,dirY]=[dirX*c-dirY*s,dirX*s+dirY*c];
+  [planeX,planeY]=[planeX*c-planeY*s,planeX*s+planeY*c];
+}
+
+/* ================= RENDER ================= */
+function render(){
+  ctx.fillStyle="#222";
+  ctx.fillRect(0,0,INTERNAL_WIDTH,INTERNAL_HEIGHT/2);
+  ctx.fillStyle="#444";
+  ctx.fillRect(0,INTERNAL_HEIGHT/2,INTERNAL_WIDTH,INTERNAL_HEIGHT/2);
+
+  for(let x=0;x<INTERNAL_WIDTH;x++){
+    const camX=2*x/INTERNAL_WIDTH-1;
+    const rayX=dirX+planeX*camX;
+    const rayY=dirY+planeY*camX;
+    let mapX=posX|0,mapY=posY|0;
+    const dX=Math.abs(1/rayX), dY=Math.abs(1/rayY);
+    let stepX,stepY,sideX,sideY;
+    if(rayX<0){stepX=-1; sideX=(posX-mapX)*dX;}
+    else{stepX=1; sideX=(mapX+1-posX)*dX;}
+    if(rayY<0){stepY=-1; sideY=(posY-mapY)*dY;}
+    else{stepY=1; sideY=(mapY+1-posY)*dY;}
+    let side;
+    while(true){
+      if(sideX<sideY){sideX+=dX; mapX+=stepX; side=0;}
+      else{sideY+=dY; mapY+=stepY; side=1;}
+      if(map[mapY][mapX]>0) break;
+    }
+    const dist=side===0
+      ? (mapX-posX+(1-stepX)/2)/rayX
+      : (mapY-posY+(1-stepY)/2)/rayY;
+    const h=INTERNAL_HEIGHT/dist;
+    const y0=INTERNAL_HEIGHT/2-h/2;
+    const y1=INTERNAL_HEIGHT/2+h/2;
+    let [r,g,b]=WALL_COLORS[map[mapY][mapX]];
+    if(side){r*=0.7; g*=0.7; b*=0.7;}
+    const fog=Math.max(0.2,1-dist*0.08);
+    ctx.strokeStyle=`rgb(${r*fog|0},${g*fog|0},${b*fog|0})`;
+    ctx.beginPath(); ctx.moveTo(x,y0); ctx.lineTo(x,y1); ctx.stroke();
+  }
+  if(showMap) minimap();
+}
+
+/* ================= MINIMAP ================= */
+function minimap(){
+  const s=2;
+  ctx.fillStyle="rgba(0,0,0,0.7)";
+  ctx.fillRect(5,5,MAP_W*s+10,MAP_H*s+10);
+  for(let y=0;y<MAP_H;y++)
+    for(let x=0;x<MAP_W;x++)
+      if(map[y][x]>0){
+        ctx.fillStyle="#888";
+        ctx.fillRect(10+x*s,10+y*s,s,s);
+      }
+  ctx.fillStyle="red";
+  ctx.fillRect(10+posX*s-2,10+posY*s-2,4,4);
+  ctx.strokeStyle="red"; ctx.beginPath(); ctx.moveTo(10+posX*s,10+posY*s); ctx.lineTo(10+(posX+dirX*10)*s,10+(posY+dirY*10)*s); ctx.stroke();
+}
+</script>
+</body>
+</html>
